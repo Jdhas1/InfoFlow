@@ -1,0 +1,6 @@
+# Cloudflare Pages response headers. Keeps the beta out of search engines and blocks embedding on other sites.
+/*
+  X-Robots-Tag: noindex, nofollow
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: no-referrer
+  X-Content-Type-Options: nosniff
