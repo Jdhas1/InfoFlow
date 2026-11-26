@@ -1,0 +1,116 @@
+/* App-level layout. Colours, fonts and spacing come from the design tokens in industry.css. */
+html,
+body {
+  margin: 0;
+  background: var(--color-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+.topbar,
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  flex-wrap: wrap;
+}
+.topbar {
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+.footer {
+  border-top: 1px solid var(--color-neutral-300);
+  font-size: 13px;
+  color: var(--color-neutral-700);
+}
+
+.kicker {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-neutral-700);
+}
+
+.version-badge {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid var(--color-accent-700);
+  color: var(--color-accent-800);
+}
+
+.placeholder {
+  flex: 1;
+  width: 100%;
+  max-width: 980px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 48px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.placeholder-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.display {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1;
+}
+.lede {
+  margin: 0;
+  max-width: 640px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-neutral-800);
+}
+
+.stage-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.stage-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  border-top: 1px solid var(--color-neutral-300);
+  color: var(--color-neutral-700);
+}
+.stage-list li.is-current {
+  color: var(--color-text);
+  font-weight: 500;
+}
+.stage-n {
+  width: 24px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-accent-700);
+}
+
+.feedback-placeholder em {
+  color: #8f3f20;
+  font-style: normal;
+}
