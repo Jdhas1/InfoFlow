@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-b31b4ef3-aa27-43c3-9f91-018ba5772ad7/styles.css">
+<script src="_ds/industry-b31b4ef3-aa27-43c3-9f91-018ba5772ad7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: var(--color-bg); }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent-800); }
+  #atlas-canvas { cursor: grab; display: block; }
+  #atlas-canvas:active { cursor: grabbing; }
+  ::selection { background: var(--color-accent-100); }
+</style>
+</helmet>
+<div style="height: 100vh; overflow: hidden; display: flex; flex-direction: column; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 15px;">
+
+  <header class="nav" style="gap: 20px; border-bottom: 1px solid var(--color-divider); flex-wrap: wrap;">
+    <div class="nav-brand" style="display: flex; flex-direction: column; gap: 1px; margin-right: auto;">
+      <div style="font-size: 21px; line-height: 1; letter-spacing: -0.01em; text-transform: uppercase;">{{ mapName }}</div>
+      <div style="font-family: var(--font-body); font-weight: 400; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">{{ headerCounts }}</div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: var(--space-2);">
+      <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-neutral-700);">Show</span>
+      <div class="seg">
+        <label class="seg-opt">
+          <input type="radio" name="atlas-mode" checked="{{ isContainers }}" onChange="{{ modeContainers }}" style="position: absolute; opacity: 0; pointer-events: none;">
+          <i style="width: 8px; height: 8px; border: 1px solid currentColor;"></i>Containers
+        </label>
+        <label class="seg-opt">
+          <input type="radio" name="atlas-mode" checked="{{ isInformation }}" onChange="{{ modeInformation }}" style="position: absolute; opacity: 0; pointer-events: none;">
+          <i style="width: 8px; height: 8px; border-radius: 50%; border: 1px solid currentColor;"></i>Information fields
+        </label>
+      </div>
+    </div>
+
+    <div class="field" style="width: 220px;">
+      <input id="atlas-search" class="input" type="search" placeholder="Search a container or field&hellip;" onInput="{{ onSearch }}">
+    </div>
+    <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-700); min-width: 74px;">{{ searchNote }}</span>
+
+    <button type="button" class="btn btn-secondary" onClick="{{ toggleCollapse }}">
+      <i style="width: 8px; height: 8px; border: 1px solid var(--color-accent); background: {{ mkCollapse }}"></i>Collapse clusters
+    </button>
+    <button type="button" class="btn btn-secondary" onClick="{{ retidy }}">Re-tidy</button>
+    <button type="button" class="btn btn-primary" onClick="{{ resetView }}">Reset view</button>
+  </header>
+
+  <div style="display: flex; flex: 1; min-height: 0; align-items: stretch;">
+
+    <aside style="width: 232px; flex: none; border-right: 1px solid var(--color-divider); padding: 16px 14px; display: flex; flex-direction: column; gap: 20px; overflow: auto;">
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">Arrange by</div>
+        <button type="button" class="btn {{ clsFlow }}" onClick="{{ lensFlow }}" style="justify-content: flex-start; gap: 9px; text-align: left; font-family: var(--font-heading); font-weight: 600; font-size: 15px;">Free flow</button>
+        <button type="button" class="btn {{ clsStep }}" onClick="{{ lensStep }}" style="justify-content: flex-start; gap: 9px; text-align: left; font-family: var(--font-heading); font-weight: 600; font-size: 15px;">Process step</button>
+        <button type="button" class="btn {{ clsOwner }}" onClick="{{ lensOwner }}" style="justify-content: flex-start; gap: 9px; text-align: left; font-family: var(--font-heading); font-weight: 600; font-size: 15px;">Role / owner</button>
+        <button type="button" class="btn {{ clsSystem }}" onClick="{{ lensSystem }}" style="justify-content: flex-start; gap: 9px; text-align: left; font-family: var(--font-heading); font-weight: 600; font-size: 15px;">System of record</button>
+        <button type="button" class="btn {{ clsType }}" onClick="{{ lensType }}" style="justify-content: flex-start; gap: 9px; text-align: left; font-family: var(--font-heading); font-weight: 600; font-size: 15px;">Information type</button>
+        <button type="button" class="btn {{ clsRisk }}" onClick="{{ lensRisk }}" style="justify-content: flex-start; gap: 9px; text-align: left; font-family: var(--font-heading); font-weight: 600; font-size: 15px;">Risk &amp; bottlenecks</button>
+        <button type="button" class="btn {{ clsJourney }}" onClick="{{ lensJourney }}" style="justify-content: flex-start; gap: 9px; text-align: left; font-family: var(--font-heading); font-weight: 600; font-size: 15px;">Follow one field</button>
+        <div style="font-size: 12px; line-height: 1.45; color: var(--color-neutral-700); padding: 2px 2px 0;">{{ lensNote }}</div>
+        <div style="font-size: 12px; line-height: 1.45; color: var(--color-accent-700); border-top: 1px solid var(--color-divider); padding: 8px 2px 0; margin-top: 4px;">{{ modeNote }}</div>
+      </div>
+
+      <sc-if value="{{ isJourney }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">Field to follow</div>
+          <sc-for list="{{ traceFields }}" as="f" hint-placeholder-count="8">
+            <button type="button" onClick="{{ f.pick }}" class="btn {{ f.cls }}" style="justify-content: flex-start; align-items: baseline; gap: 8px; text-align: left; width: 100%;">
+              <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 14px; color: #1d1f20; flex: 1;">{{ f.name }}</span>
+              <span style="font-size: 11px; color: var(--color-neutral-700);">{{ f.hops }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">How it moves</div>
+        <div style="display: flex; flex-direction: column; gap: 5px; font-size: 13px; color: var(--color-neutral-800);">
+          <div style="display: flex; align-items: center; gap: 8px;"><i style="width: 26px; height: 0; border-top: 2px solid var(--color-accent-700); flex: none;"></i>Automatic / generated</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><i style="width: 26px; height: 0; border-top: 2px dashed var(--color-accent-400); flex: none;"></i>Typed in by hand</div>
+          <div style="display: flex; align-items: center; gap: 8px;"><i style="width: 26px; height: 0; border-top: 2px dotted #b4552f; flex: none;"></i>Verbal / tribal</div>
+          <div style="font-size: 12px; color: var(--color-neutral-700); padding-top: 2px;">Particle speed is transfer speed. Slow, sparse, broken lines are where information waits on a person.</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">What the shapes mean</div>
+        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--color-neutral-800);">
+          <div style="display: flex; align-items: center; gap: 9px;"><i style="width: 13px; height: 13px; flex: none; border: 1px solid var(--color-accent-700);"></i>A container &mdash; bigger means more traffic</div>
+          <div style="display: flex; align-items: center; gap: 9px;"><i style="width: 13px; height: 13px; flex: none; border-radius: 50%; border: 1px solid var(--color-accent-400);"></i>An information field &mdash; bigger means kept in more places</div>
+          <div style="display: flex; align-items: center; gap: 9px;"><i style="width: 13px; height: 13px; flex: none; border: 1px solid #b4552f; background: rgba(180,85,47,0.16);"></i>Rust = re-keyed or verbal, in the risk view</div>
+          <div style="display: flex; align-items: center; gap: 9px;"><i style="width: 9px; height: 9px; flex: none; border-radius: 50%; background: #b4552f;"></i>Corner dot = something arrives here by word of mouth</div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">Most at risk</div>
+        <sc-for list="{{ topRisk }}" as="r" hint-placeholder-count="5">
+          <button type="button" onClick="{{ r.pick }}" class="btn btn-ghost" style="justify-content: flex-start; align-items: baseline; gap: 8px; text-align: left; width: 100%; border: 0; border-bottom: 1px solid var(--color-divider); color: var(--color-text); padding-inline: var(--space-1);">
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 14px; color: #1d1f20; flex: 1;">{{ r.name }}</span>
+            <span style="font-size: 11px; font-variant-numeric: tabular-nums; color: {{ r.color }}">{{ r.label }}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">Departments</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+          <sc-for list="{{ owners }}" as="o" hint-placeholder-count="8">
+            <button type="button" class="tag {{ o.cls }}" onClick="{{ o.toggle }}" style="cursor: pointer; border: 1px solid var(--color-divider);" style-hover="border-color: var(--color-accent)">{{ o.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </aside>
+
+    <main style="flex: 1; min-width: 0; position: relative; overflow: hidden;">
+      <canvas id="atlas-canvas" ref="{{ canvasRef }}" style="width: 100%; height: 100%;"></canvas>
+      <div style="position: absolute; left: 14px; bottom: 12px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-700); pointer-events: none;">Drag a node to place it &middot; double-click to release &middot; drag the board to pan &middot; scroll to zoom &middot; hover to trace &middot; click to isolate</div>
+      <div style="position: absolute; right: 14px; top: 12px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-700); pointer-events: none; text-align: right;">{{ statusLine }}</div>
+    </main>
+
+    <sc-if value="{{ hasSelection }}" hint-placeholder-val="{{ true }}">
+      <aside style="width: 318px; flex: none; border-left: 1px solid var(--color-divider); display: flex; flex-direction: column; overflow: auto;">
+        <div class="card blueprint" style="margin: var(--space-4) var(--space-3) var(--space-2); position: relative; gap: var(--space-1);">
+          <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <div class="card-kicker">{{ sel.kicker }}</div>
+          <div class="card-title" style="font-size: 25px;">{{ sel.name }}</div>
+          <div class="card-body" style="opacity: 1; color: var(--color-neutral-700);">{{ sel.meta }}</div>
+          <div class="card-meta" style="flex-wrap: wrap; gap: 6px; margin-top: var(--space-1);">
+            <span class="tag tag-accent">{{ sel.tagA }}</span>
+            <span class="tag tag-accent">{{ sel.tagB }}</span>
+            <span class="tag tag-outline" style="border-color: {{ sel.riskColor }}; color: {{ sel.riskColor }}">{{ sel.riskLabel }}</span>
+          </div>
+          <button type="button" class="btn btn-ghost" onClick="{{ clearSelection }}" style="position: absolute; right: 6px; top: 6px; font-size: 12px; min-height: 0; padding: 2px 6px;">Close</button>
+        </div>
+        <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">{{ sel.inTitle }}</div>
+            <sc-for list="{{ sel.inbound }}" as="f" hint-placeholder-count="4">
+              <div style="display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 6px 0; border-bottom: 1px solid var(--color-divider);">
+                <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px;">{{ f.info }}</span>
+                <span style="font-size: 12px; color: {{ f.color }}">{{ f.method }}</span>
+                <span style="font-size: 12px; color: var(--color-neutral-700); grid-column: 1 / -1;">{{ f.other }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-neutral-700);">{{ sel.outTitle }}</div>
+            <sc-for list="{{ sel.outbound }}" as="f" hint-placeholder-count="4">
+              <div style="display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 6px 0; border-bottom: 1px solid var(--color-divider);">
+                <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px;">{{ f.info }}</span>
+                <span style="font-size: 12px; color: {{ f.color }}">{{ f.method }}</span>
+                <span style="font-size: 12px; color: var(--color-neutral-700); grid-column: 1 / -1;">{{ f.other }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size: 12px; line-height: 1.5; color: var(--color-neutral-700); border-top: 1px solid var(--color-divider); padding-top: 12px;">{{ sel.diagnosis }}</div>
+        </div>
+      </aside>
+    </sc-if>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;motion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;riskEmphasis&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;lens&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;step&quot;,&quot;flow&quot;,&quot;owner&quot;,&quot;system&quot;,&quot;type&quot;,&quot;risk&quot;,&quot;journey&quot;],&quot;default&quot;:&quot;step&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Arrangement shown on open&quot;}}">
+const METHODS = {
+  gen:    { label: "Generated here",       speed: 0.50, dash: null,    risk: 0,   color: "#416180", ink: "#416180" },
+  auto:   { label: "Copied automatically", speed: 0.58, dash: null,    risk: 0.2, color: "#416180", ink: "#416180" },
+  recv:   { label: "Received",             speed: 0.40, dash: null,    risk: 0.5, color: "#416180", ink: "#416180" },
+  scan:   { label: "Scanned / re-entered", speed: 0.24, dash: [7, 6],  risk: 1.5, color: "#749dc4", ink: "#2c455d" },
+  key:    { label: "Typed in by hand",     speed: 0.17, dash: [7, 6],  risk: 2.2, color: "#749dc4", ink: "#2c455d" },
+  verbal: { label: "Verbal / tribal",      speed: 0.10, dash: [2, 7],  risk: 3.4, color: "#b4552f", ink: "#8f3f20" }
+};
+
+const CONTAINERS = [
+  ["c1","RFQ Email",0,"Customer Care","Email","Commercial"],
+  ["c2","Quote Sheet",0,"Estimating","Excel","Commercial"],
+  ["c3","PO PDF",1,"Customer Care","Paper / PDF","Commercial"],
+  ["c4","Order Inbox",1,"Customer Care","Email","Commercial"],
+  ["c5","Job Log",2,"Customer Care","Excel","Commercial"],
+  ["c6","ERP Sales Order",2,"Customer Care","ERP","Commercial"],
+  ["c7","Drawing Package",3,"Engineering","PDF Vault","Engineering"],
+  ["c8","Bill of Materials",3,"Engineering","Excel","Engineering"],
+  ["c9","Router Sheet",3,"Engineering","Paper / PDF","Engineering"],
+  ["c10","Supplier RFQ",4,"Purchasing","Email","Supply"],
+  ["c11","Supplier PO",4,"Purchasing","ERP","Supply"],
+  ["c12","Receiving Log",4,"Receiving","Paper / PDF","Supply"],
+  ["c13","Schedule Whiteboard",5,"Planning","Whiteboard","Scheduling"],
+  ["c14","ERP Work Order",5,"Planning","ERP","Scheduling"],
+  ["c15","Shop Traveler",6,"Machining","Paper / PDF","Scheduling"],
+  ["c16","Setup Sheet",6,"Machining","Excel","Engineering"],
+  ["c17","CNC Controller",6,"Machining","Machine","Engineering"],
+  ["c18","Shift Pass-down",6,"Machining","In someone's head","Scheduling"],
+  ["c19","Inspection Report",7,"Quality","Paper / PDF","Quality"],
+  ["c20","CMM Output",7,"Quality","Machine","Quality"],
+  ["c21","Cert Package",7,"Quality","PDF Vault","Quality"],
+  ["c22","Packing Slip",8,"Shipping","ERP","Logistics"],
+  ["c23","Invoice",8,"Accounting","ERP","Logistics"],
+  ["c24","Customer Portal",8,"Customer Care","Web","Logistics"]
+];
+
+const INFOS = [
+  ["i1","Customer","Commercial"],["i2","PO #","Commercial"],["i3","Part #","Engineering"],
+  ["i4","Revision","Engineering"],["i5","Quantity","Commercial"],["i6","Price","Commercial"],
+  ["i7","Due Date","Scheduling"],["i8","Job Number","Commercial"],["i9","Material Spec","Engineering"],
+  ["i10","Lot / Heat #","Quality"],["i11","Lead Time","Supply"],["i12","Work Center","Scheduling"],
+  ["i13","Setup Time","Scheduling"],["i14","Tooling List","Engineering"],["i15","Operator Notes","Scheduling"],
+  ["i16","Inspection Dims","Quality"],["i17","Nonconformance","Quality"],["i18","Ship Date","Logistics"],
+  ["i19","Tracking #","Logistics"],["i20","Invoice #","Logistics"]
+];
+
+const FLOWS = [
+  ["i1","c1","c2","key"],["i1","c3","c5","key"],["i1","c5","c6","key"],["i1","c6","c22","auto"],["i1","c6","c23","auto"],
+  ["i2","c4","c3","recv"],["i2","c3","c5","key"],["i2","c5","c6","key"],["i2","c6","c22","auto"],["i2","c6","c23","auto"],["i2","c3","c24","scan"],
+  ["i3","c1","c2","key"],["i3","c3","c5","key"],["i3","c5","c7","key"],["i3","c7","c8","auto"],["i3","c7","c9","auto"],["i3","c9","c15","auto"],["i3","c15","c16","key"],["i3","c16","c17","key"],["i3","c19","c21","auto"],
+  ["i4","c7","c9","auto"],["i4","c9","c15","auto"],["i4","c15","c18","verbal"],["i4","c7","c16","key"],["i4","c19","c21","auto"],
+  ["i5","c3","c5","key"],["i5","c5","c6","key"],["i5","c6","c14","auto"],["i5","c14","c15","auto"],["i5","c15","c19","key"],["i5","c6","c22","auto"],
+  ["i6","c2","c1","key"],["i6","c3","c5","key"],["i6","c5","c6","key"],["i6","c6","c23","auto"],
+  ["i7","c3","c5","key"],["i7","c5","c6","key"],["i7","c6","c13","key"],["i7","c13","c14","key"],["i7","c14","c15","auto"],["i7","c13","c18","verbal"],
+  ["i8","c5","c6","gen"],["i8","c5","c9","key"],["i8","c5","c10","key"],["i8","c6","c14","auto"],["i8","c14","c15","auto"],["i8","c15","c19","key"],["i8","c19","c21","auto"],["i8","c6","c22","auto"],["i8","c6","c23","auto"],
+  ["i9","c7","c8","auto"],["i9","c8","c10","key"],["i9","c10","c11","auto"],["i9","c11","c12","auto"],["i9","c12","c21","scan"],
+  ["i10","c12","c19","key"],["i10","c12","c21","scan"],["i10","c19","c21","auto"],["i10","c12","c18","verbal"],
+  ["i11","c10","c11","key"],["i11","c11","c13","verbal"],["i11","c13","c14","key"],
+  ["i12","c9","c13","key"],["i12","c13","c14","key"],["i12","c14","c15","auto"],["i12","c13","c18","verbal"],
+  ["i13","c9","c16","key"],["i13","c16","c17","key"],["i13","c16","c13","verbal"],
+  ["i14","c9","c16","key"],["i14","c16","c18","verbal"],
+  ["i15","c18","c15","verbal"],["i15","c15","c19","key"],["i15","c18","c16","key"],
+  ["i16","c7","c19","key"],["i16","c20","c19","auto"],["i16","c19","c21","auto"],["i16","c17","c20","auto"],
+  ["i17","c19","c18","verbal"],["i17","c19","c5","key"],["i17","c19","c21","key"],
+  ["i18","c13","c22","key"],["i18","c22","c24","auto"],["i18","c22","c23","auto"],
+  ["i19","c22","c24","key"],["i19","c22","c23","auto"],
+  ["i20","c23","c24","auto"],["i20","c23","c6","auto"]
+];
+
+const STEPS = ["Quote","Receive PO","Job Number","Engineering release","Purchasing","Scheduling","Production","Inspection","Ship & invoice"];
+const LENS_NOTES = {
+  flow: "Anchored left-to-right by step, free vertically \u2014 things that exchange a lot pull together, so clumps and islands show up. Drag any node to place it; double-click to release.",
+  journey: "One field, end to end. Pick it below: every container that keeps it, in step order, with how it got there.",
+  step: "The same network, pulled into process order. Long backward arcs are rework loops.",
+  owner: "Clustered by who owns the container. Lines crossing between clusters are handoffs between people.",
+  system: "Clustered by system of record. A field appearing in several clusters is a field kept in several places.",
+  type: "Clustered by what kind of information it is, regardless of who holds it or when.",
+  risk: "Three bands by re-keying and verbal dependency, worst at the top \u2014 read it as a triage list."
+};
+const WORLD = { w: 1680, h: 1000 };
+
+class Component extends DCLogic {
+  state = { lens: "step", mode: "containers", collapsed: false, selected: null, hover: null, q: "", offOwners: [], trace: "i8" };
+
+  constructor(props) {
+    super(props);
+    if (this.props.lens) this.state = Object.assign({}, this.state, { lens: this.props.lens });
+    this.cam = { x: 0, y: 0, z: 1 };
+    this.t = 0;
+    this.build();
+  }
+
+  /* ---------- model ---------- */
+  build() {
+    this.cById = {};
+    this.containers = CONTAINERS.map(function (c, i) {
+      return { id: c[0], name: c[1], step: c[2], owner: c[3], system: c[4], cat: c[5], fields: c[6] || [], kind: "container", idx: i };
+    });
+    this.containers.forEach(function (c) { this.cById[c.id] = c; }, this);
+    this.iById = {};
+    this.infos = INFOS.map(function (n, i) {
+      return { id: n[0], name: n[1], cat: n[2], kind: "info", idx: i };
+    });
+    this.infos.forEach(function (n) { this.iById[n.id] = n; }, this);
+
+    this.flows = FLOWS.map(function (f) {
+      return { info: f[0], from: f[1], to: f[2], method: f[3] };
+    });
+
+    // risk + touch counts per container
+    this.containers.forEach(function (c) { c.risk = 0; c.inN = 0; c.outN = 0; c.keyed = 0; c.verbal = 0; });
+    this.infos.forEach(function (n) { n.places = {}; n.keyed = 0; n.verbal = 0; n.risk = 0; });
+    this.flows.forEach(function (f) {
+      const m = METHODS[f.method], a = this.cById[f.from], b = this.cById[f.to], inf = this.iById[f.info];
+      a.outN++; b.inN++; a.risk += m.risk * 0.45; b.risk += m.risk;
+      if (f.method === "key" || f.method === "scan") { b.keyed++; inf.keyed++; }
+      if (f.method === "verbal") { b.verbal++; inf.verbal++; }
+      inf.risk += m.risk; inf.places[f.from] = 1; inf.places[f.to] = 1;
+    }, this);
+
+    // a field defined on a container lives there even if no recorded transfer moves it
+    this.containers.forEach(function (c) { c.fields.forEach(function (f) { const inf = this.iById[f]; if (inf) inf.places[c.id] = 1; }, this); }, this);
+
+    // each field inherits a dominant owner / system / step from the containers it lives in
+    this.infos.forEach(function (n) {
+      const ps = Object.keys(n.places).map(function (p) { return this.cById[p]; }, this);
+      const top = function (field) {
+        const c = {};
+        ps.forEach(function (x) { c[x[field]] = (c[x[field]] || 0) + 1; });
+        return Object.keys(c).sort(function (a, b) { return c[b] - c[a]; })[0];
+      };
+      n.owner = top("owner"); n.system = top("system");
+      n.step = Math.round(ps.reduce(function (s, x) { return s + x.step; }, 0) / Math.max(1, ps.length));
+      n.firstStep = Math.min.apply(null, ps.map(function (x) { return x.step; }));
+    }, this);
+
+    // fields that travel together in the same transfer form bundles
+    const pairs = {};
+    const byTransfer = {};
+    this.flows.forEach(function (f) {
+      const k = f.from + ">" + f.to;
+      (byTransfer[k] = byTransfer[k] || []).push(f);
+    });
+    Object.keys(byTransfer).forEach(function (k) {
+      const list = byTransfer[k];
+      for (let i = 0; i < list.length; i++) {
+        for (let j = i + 1; j < list.length; j++) {
+          const a = list[i], b = list[j];
+          const pk = a.info < b.info ? a.info + "|" + b.info : b.info + "|" + a.info;
+          const worst = METHODS[a.method].risk > METHODS[b.method].risk ? a.method : b.method;
+          if (!pairs[pk]) pairs[pk] = { a: pk.split("|")[0], b: pk.split("|")[1], w: 0, method: worst };
+          pairs[pk].w++;
+          if (METHODS[worst].risk > METHODS[pairs[pk].method].risk) pairs[pk].method = worst;
+        }
+      }
+    });
+    this.iEdges = Object.keys(pairs).map(function (k) { return pairs[k]; })
+      .filter(function (e) { return e.w >= 2; });
+    const maxR = Math.max.apply(null, this.containers.map(function (c) { return c.risk; }));
+    this.containers.forEach(function (c) { c.r01 = c.risk / maxR; });
+    const maxI = Math.max.apply(null, this.infos.map(function (n) { return n.risk; }));
+    this.infos.forEach(function (n) { n.r01 = n.risk / maxI; n.placeN = Object.keys(n.places).length; });
+
+    // aggregated container->container edges
+    const agg = {};
+    this.flows.forEach(function (f) {
+      const k = f.from + ">" + f.to;
+      if (!agg[k]) agg[k] = { from: f.from, to: f.to, infos: [], methods: {} };
+      agg[k].infos.push(f.info);
+      agg[k].methods[f.method] = (agg[k].methods[f.method] || 0) + 1;
+      if (!agg[k].worst || METHODS[f.method].risk > METHODS[agg[k].worst].risk) agg[k].worst = f.method;
+    });
+    this.cEdges = Object.keys(agg).map(function (k) { return agg[k]; });
+
+    this.nodeState = {};
+    const all = this.containers.concat(this.infos);
+    all.forEach(function (n, i) {
+      const a = (i / all.length) * Math.PI * 2;
+      this.nodeState[n.id] = { x: WORLD.w / 2 + Math.cos(a) * 320, y: WORLD.h / 2 + Math.sin(a) * 240, vx: 0, vy: 0 };
+    }, this);
+  }
+
+  activeNodes() {
+    const off = this.state.offOwners;
+    if (this.state.lens === "journey") {
+      const f = this.iById[this.state.trace];
+      if (!f) return [];
+      return Object.keys(f.places).map(function (p) { return this.cById[p]; }, this)
+        .sort(function (a, b) { return a.step - b.step; });
+    }
+    const cs = this.containers.filter(function (c) { return off.indexOf(c.owner) < 0; });
+    if (this.state.mode === "containers") return cs;
+    const live = {};
+    cs.forEach(function (c) { live[c.id] = 1; });
+    return this.infos.filter(function (n) {
+      return Object.keys(n.places).some(function (p) { return live[p]; });
+    });
+  }
+
+  activeEdges() {
+    const live = {};
+    this.activeNodes().forEach(function (n) { live[n.id] = 1; });
+    if (this.state.lens === "journey") {
+      return this.flows.filter(function (f) { return f.info === this.state.trace; }, this)
+        .map(function (f) { return { a: f.from, b: f.to, w: 1, method: f.method, infos: [f.info] }; });
+    }
+    if (this.state.mode === "containers") {
+      return this.cEdges.filter(function (e) { return live[e.from] && live[e.to]; })
+        .map(function (e) { return { a: e.from, b: e.to, w: e.infos.length, method: e.worst, infos: e.infos }; });
+    }
+    return this.iEdges.filter(function (e) { return live[e.a] && live[e.b]; })
+      .map(function (e) { return { a: e.a, b: e.b, w: Math.min(6, e.w), method: e.method, infos: [e.a, e.b] }; });
+  }
+
+  collapse(nodes, edges) {
+    const gs = {}, byNode = {};
+    nodes.forEach(function (n) {
+      const k = this.groupKey(n);
+      (gs[k] = gs[k] || []).push(n);
+      byNode[n.id] = k;
+    }, this);
+    const gnodes = Object.keys(gs).map(function (k, i) {
+      const list = gs[k], cs = list.filter(function (n) { return n.kind === "container"; });
+      const sum = function (f) { return list.reduce(function (s, n) { return s + (n[f] || 0); }, 0); };
+      const nd = {
+        id: "g:" + k, name: k, kind: "container", group: true, idx: i,
+        step: cs.length ? Math.round(cs.reduce(function (s, n) { return s + n.step; }, 0) / cs.length) : 0,
+        owner: cs.length ? cs[0].owner : "\u2014",
+        system: list.length + " containers", cat: k,
+        inN: sum("inN"), outN: sum("outN"), keyed: sum("keyed"), verbal: sum("verbal"),
+        r01: list.reduce(function (s, n) { return Math.max(s, n.r01 || 0); }, 0), placeN: list.length
+      };
+      this.memberOf = this.memberOf || {};
+      this.memberOf[nd.id] = list.map(function (n) { return n.id; });
+      if (!this.nodeState[nd.id]) {
+        const s0 = this.nodeState[list[0].id];
+        this.nodeState[nd.id] = { x: s0 ? s0.x : WORLD.w / 2, y: s0 ? s0.y : WORLD.h / 2, vx: 0, vy: 0 };
+      }
+      return nd;
+    }, this);
+    const agg = {}, out = [];
+    edges.forEach(function (e) {
+      const a = byNode[e.a], b = byNode[e.b];
+      if (!a || !b || a === b) return;
+      const k = a + ">" + b;
+      if (agg[k]) {
+        agg[k].w += e.w;
+        if (METHODS[e.method].risk > METHODS[agg[k].method].risk) agg[k].method = e.method;
+        return;
+      }
+      agg[k] = { a: "g:" + a, b: "g:" + b, w: e.w, method: e.method, infos: [] };
+      out.push(agg[k]);
+    });
+    return { nodes: gnodes, edges: out };
+  }
+
+  groupKey(n) {
+    const l = this.state.lens;
+    if (n.group) return n.cat;
+    if (n.kind === "info") {
+      if (l === "owner") return n.owner;
+      if (l === "system") return n.system;
+      if (l === "step") return STEPS[n.step];
+      return n.cat;
+    }
+    if (l === "owner") return n.owner;
+    if (l === "system") return n.system;
+    if (l === "type") return n.cat;
+    if (l === "step" || l === "journey") return STEPS[n.step];
+    return n.cat;
+  }
+
+  /* ---------- layout ---------- */
+  layout() {
+    const lens = this.state.lens;
+    let nodes = this.activeNodes();
+    let cEdges = null;
+    if (this.state.collapsed) {
+      const c = this.collapse(nodes, this.activeEdges());
+      nodes = c.nodes; cEdges = c.edges;
+    }
+    this.nodes = nodes;
+    this.edges = cEdges || this.activeEdges();
+    this.nodeById = {};
+    nodes.forEach(function (n) { this.nodeById[n.id] = n; }, this);
+    this.adj = { out: {}, in: {} };
+    this.edges.forEach(function (e) {
+      (this.adj.out[e.a] = this.adj.out[e.a] || []).push(e.b);
+      (this.adj.in[e.b] = this.adj.in[e.b] || []).push(e.a);
+    }, this);
+    this.groups = [];
+    if (lens === "journey") {
+      // a filmstrip: one container per column, in the order the field reaches them
+      const list = nodes.slice().sort(function (a, b) { return a.step - b.step || a.idx - b.idx; });
+      const pitch = 224, totalW = pitch * Math.max(0, list.length - 1);
+      const steps = {};
+      list.forEach(function (n, i) {
+        n.tx = WORLD.w / 2 - totalW / 2 + i * pitch;
+        n.ty = WORLD.h / 2 + (i % 2 ? 124 : -124);
+        (steps[n.step] = steps[n.step] || []).push(n);
+      });
+      Object.keys(steps).forEach(function (k) {
+        this.groups.push({ label: STEPS[+k] || ("Step " + (+k + 1)), nodes: steps[k] });
+      }, this);
+    } else if (lens === "step") {
+      const cols = {};
+      nodes.forEach(function (n) { (cols[n.step] = cols[n.step] || []).push(n); });
+      const keys = STEPS.map(function (_, i) { return i; });
+      Object.keys(cols).map(Number).forEach(function (k) { if (keys.indexOf(k) < 0) keys.push(k); });
+      keys.sort(function (a, b) { return a - b; });
+      keys.forEach(function (k) { cols[k] = cols[k] || []; });
+      const order = {};
+      keys.forEach(function (k) { cols[k].forEach(function (n, i) { order[n.id] = i; }); });
+      // barycentre sweeps — order each column by where its neighbours sit, to cut crossings
+      for (let s = 0; s < 8; s++) {
+        const seq = s % 2 ? keys.slice().reverse() : keys;
+        seq.forEach(function (k) {
+          const list = cols[k];
+          list.forEach(function (n) {
+            const nb = (this.adj.in[n.id] || []).concat(this.adj.out[n.id] || [])
+              .filter(function (id) { return order[id] != null && this.nodeById[id] && this.nodeById[id].step !== k; }, this);
+            n._b = nb.length ? nb.reduce(function (a, id) { return a + order[id]; }, 0) / nb.length : order[n.id];
+          }, this);
+          list.sort(function (a, b) { return a._b - b._b || a.idx - b.idx; });
+          list.forEach(function (n, i) { order[n.id] = i; });
+        }, this);
+      }
+      const colW = 212, rowH = 124;
+      const totalW = colW * keys.length;
+      keys.forEach(function (k, ki) {
+        const list = cols[k];
+        const x = WORLD.w / 2 - totalW / 2 + colW * (ki + 0.5);
+        const hgt = (list.length - 1) * rowH;
+        list.forEach(function (n, i) { n.tx = x; n.ty = WORLD.h / 2 - hgt / 2 + i * rowH; });
+        this.groups.push({ label: STEPS[k] || ("Step " + (k + 1)), nodes: list, empty: list.length ? null : { x: x, y: WORLD.h / 2 } });
+      }, this);
+    } else if (lens === "risk") {
+      // three stacked bands, worst at the top — read it like a triage list
+      const sorted = nodes.slice().sort(function (a, b) { return b.r01 - a.r01; });
+      const bands = [[], [], []];
+      sorted.forEach(function (n) { bands[n.r01 > 0.62 ? 0 : n.r01 > 0.3 ? 1 : 2].push(n); });
+      const CWr = 212, CHr = 128, perRow = 7;
+      let yb = 120;
+      const labels = ["Rekeyed or verbal \u2014 fix first", "Mixed", "Flows cleanly"];
+      bands.forEach(function (band, bi) {
+        if (!band.length) return;
+        const rows = Math.ceil(band.length / perRow);
+        band.forEach(function (n, i) {
+          const col = i % perRow, row = Math.floor(i / perRow);
+          const count = Math.min(perRow, band.length - row * perRow);
+          n.tx = WORLD.w / 2 - (count * CWr) / 2 + (col + 0.5) * CWr;
+          n.ty = yb + (row + 0.5) * CHr;
+        });
+        this.groups.push({ label: labels[bi], nodes: band });
+        yb += rows * CHr + 96;
+      }, this);
+    } else if (lens === "flow") {
+      // organic, but anchored left-to-right by process step so it stays readable
+      const colW = WORLD.w / STEPS.length;
+      nodes.forEach(function (n) {
+        n.tx = null; n.ty = null;
+        const st = n.kind === "container" ? n.step
+          : Object.keys(n.places).reduce(function (s, p, i, arr) {
+              return s + (this.cById[p] ? this.cById[p].step / arr.length : 0);
+            }.bind(this), 0);
+        n.ax = colW * (st + 0.5);
+      }, this);
+      const cats = {};
+      nodes.forEach(function (n) { (cats[this.groupKey(n)] = cats[this.groupKey(n)] || []).push(n); }, this);
+      this.groups = Object.keys(cats).map(function (k) { return { label: k, nodes: cats[k] }; });
+    } else {
+      const gs = {};
+      nodes.forEach(function (n) {
+        if (n.kind === "info" && this.state.mode === "containers") { n.tx = null; n.ty = null; return; }
+        (gs[this.groupKey(n)] = gs[this.groupKey(n)] || []).push(n);
+      }, this);
+      // pack clusters into rows sized to their own contents, so the board stays compact
+      const keys = Object.keys(gs).sort();
+      const CW = 208, CH = 126;
+      const cells = keys.map(function (k) {
+        const list = gs[k];
+        const c = Math.min(3, Math.ceil(Math.sqrt(list.length)));
+        const r = Math.ceil(list.length / c);
+        return { k: k, list: list, c: c, r: r, rw: c * CW + 74, rh: r * CH + 104 };
+      });
+      const maxRow = 1500, rows = [];
+      let row = { w: 0, cells: [] };
+      cells.forEach(function (c) {
+        if (row.cells.length && row.w + c.rw > maxRow) { rows.push(row); row = { w: 0, cells: [] }; }
+        row.cells.push(c); row.w += c.rw;
+      });
+      if (row.cells.length) rows.push(row);
+      const totalH = rows.reduce(function (s, r) {
+        return s + Math.max.apply(null, r.cells.map(function (c) { return c.rh; }));
+      }, 0);
+      let y = WORLD.h / 2 - totalH / 2;
+      rows.forEach(function (r) {
+        const rh = Math.max.apply(null, r.cells.map(function (c) { return c.rh; }));
+        let x = WORLD.w / 2 - r.w / 2;
+        r.cells.forEach(function (c) {
+          const cx = x + c.rw / 2, cy = y + rh / 2;
+          x += c.rw;
+          const gw = c.c * CW, gh = c.r * CH;
+          c.list.forEach(function (n, i) {
+            const col = i % c.c, rw2 = Math.floor(i / c.c);
+            n.tx = cx - gw / 2 + (col + 0.5) * CW;
+            n.ty = cy - gh / 2 + (rw2 + 0.5) * CH;
+          });
+          this.groups.push({ label: c.k, nodes: c.list });
+        }, this);
+        y += rh;
+      }, this);
+    }
+    this.kick();
+    // converge here, synchronously: never depend on animation frames being delivered
+    const steps = lens === "flow" ? 240 : 400;
+    for (let i = 0; i < steps; i++) {
+      this.tick();
+      if (!this.alpha) break;
+    }
+    this.fitToNodes();
+  }
+
+  tick() {
+    const ns = this.nodeState, nodes = this.nodes, lens = this.state.lens;
+    if (!nodes || !nodes.length) return;
+    if (this.alpha == null) this.alpha = 1;
+    if (this.alpha < 0.004 && !this.dragging) return; // settled — the map holds still
+
+    // grid arrangements have exact targets: ease straight to them, no physics
+    if (lens !== "flow") {
+      let far = 0;
+      nodes.forEach(function (n) {
+        const s = ns[n.id];
+        if (s.pin) { s.vx = 0; s.vy = 0; return; }
+        if (n.tx == null) {
+          if (this.state.mode !== "containers" || n.kind !== "info") return;
+          const ps = Object.keys(n.places);
+          let cx = 0, cy = 0, k = 0;
+          ps.forEach(function (p) { const sp = ns[p]; if (sp) { cx += sp.x; cy += sp.y; k++; } });
+          if (!k) return;
+          const dx0 = cx / k - s.x, dy0 = cy / k - s.y;
+          s.x += dx0 * 0.12; s.y += dy0 * 0.12;
+          far = Math.max(far, Math.abs(dx0), Math.abs(dy0));
+          return;
+        }
+        const dx = n.tx - s.x, dy = n.ty - s.y;
+        s.x += dx * 0.22; s.y += dy * 0.22;
+        s.vx = 0; s.vy = 0;
+        far = Math.max(far, Math.abs(dx), Math.abs(dy));
+      }, this);
+      this.alpha = far > 0.7 ? 1 : 0;
+      if (!this.alpha && !this.autofitted) this.fitToNodes();
+      return;
+    }
+
+    for (let i = 0; lens === "flow" && i < nodes.length; i++) {
+      const a = nodes[i], sa = ns[a.id];
+      for (let j = i + 1; j < nodes.length; j++) {
+        const sb = ns[nodes[j].id];
+        let dx = sb.x - sa.x, dy = sb.y - sa.y;
+        let d2 = dx * dx + dy * dy;
+        if (d2 < 1) { d2 = 1; dx = Math.random() - 0.5; dy = Math.random() - 0.5; }
+        const min = (a.kind === "info" || nodes[j].kind === "info") ? 84 : lens === "flow" ? 178 : 132;
+        if (d2 < min * min) {
+          const d = Math.sqrt(d2), f = (min - d) / d * 0.14;
+          sa.vx -= dx * f; sa.vy -= dy * f; sb.vx += dx * f; sb.vy += dy * f;
+        }
+      }
+    }
+    if (lens === "flow") {
+      this.edges.forEach(function (e) {
+        const sa = ns[e.a], sb = ns[e.b];
+        if (!sa || !sb) return;
+        const dx = sb.x - sa.x, dy = sb.y - sa.y, d = Math.max(20, Math.hypot(dx, dy));
+        const target = 210;
+        const f = ((d - target) / d) * 0.009 * Math.min(3, e.w);
+        sa.vx += dx * f; sa.vy += dy * f; sb.vx -= dx * f; sb.vy -= dy * f;
+      });
+      nodes.forEach(function (n) {
+        const s = ns[n.id];
+        if (n.ax != null) s.vx += (n.ax - s.x) * 0.022;
+        s.vy += (WORLD.h / 2 - s.y) * 0.0022;
+      });
+    } else {
+      nodes.forEach(function (n) {
+        const s = ns[n.id];
+        if (n.tx == null) return;
+        s.vx += (n.tx - s.x) * 0.09;
+        s.vy += (n.ty - s.y) * 0.09;
+      });
+    }
+    // information fields are held near the containers that keep them
+    nodes.forEach(function (n) {
+      if (this.state.mode !== "containers" || n.kind !== "info" || n.tx != null) return;
+      const s = ns[n.id], ps = Object.keys(n.places);
+      let cx = 0, cy = 0, k = 0;
+      ps.forEach(function (p) { const sp = ns[p]; if (sp) { cx += sp.x; cy += sp.y; k++; } });
+      if (!k) return;
+      s.vx += (cx / k - s.x) * 0.02;
+      s.vy += (cy / k - s.y) * 0.02;
+    }, this);
+    const a = this.alpha;
+    nodes.forEach(function (n) {
+      const s = ns[n.id];
+      if (s.pin) { s.vx = 0; s.vy = 0; return; }
+      s.vx *= 0.82; s.vy *= 0.82;
+      s.x += s.vx * a; s.y += s.vy * a;
+    });
+    this.alpha = Math.max(0, a * 0.962);
+    if (this.alpha < 0.004 && !this.autofitted) this.fitToNodes();
+  }
+
+  kick() { this.alpha = 1; this.autofitted = false; }
+
+  /* ---------- highlight sets ---------- */
+  focusSets() {
+    const id = this.state.selected || this.state.hover;
+    if (!id) return null;
+    const up = {}, down = {};
+    const walk = function (dir, start, seen, depth) {
+      (this.adj[dir][start] || []).forEach(function (n) {
+        if (seen[n] || depth > 4) return;
+        seen[n] = depth;
+        walk(dir, n, seen, depth + 1);
+      });
+    }.bind(this);
+    walk("in", id, up, 1); walk("out", id, down, 1);
+    return { id: id, up: up, down: down };
+  }
+
+  matchSet() {
+    const q = this.state.q.trim().toLowerCase();
+    if (!q) return null;
+    const hits = {};
+    this.containers.concat(this.infos).forEach(function (n) {
+      if (n.name.toLowerCase().indexOf(q) >= 0) hits[n.id] = 1;
+    });
+    const m = {};
+    (this.nodes || []).forEach(function (n) {
+      if (hits[n.id]) { m[n.id] = 1; return; }
+      if (!n.group) return;
+      const members = (this.memberOf && this.memberOf[n.id]) || [];
+      if (members.some(function (id) { return hits[id]; })) m[n.id] = 1;
+    }, this);
+    this.matchCount = Object.keys(m).length;
+    return this.matchCount ? m : null;
+  }
+
+  /* ---------- drawing ---------- */
+  nodeR(nd) {
+    const risky = this.state.lens === "risk" || this.props.riskEmphasis;
+    if (nd.kind === "container") {
+      return (15 + Math.min(16, (nd.inN + nd.outN) * 0.62)) * (risky ? 0.75 + nd.r01 * 0.7 : 1);
+    }
+    return (9 + Math.min(13, nd.placeN * 1.7)) * (risky ? 0.8 + nd.r01 * 0.6 : 1);
+  }
+
+  // right-angle routing: two elbows, offset per edge so parallel runs stay separable
+  edgePath(e, ei) {
+    const ns = this.nodeState, sa = ns[e.a], sb = ns[e.b];
+    const na = this.nodeById[e.a], nb = this.nodeById[e.b];
+    if (!sa || !sb || !na || !nb) return null;
+    const ra = this.nodeR(na) + 9, rb = this.nodeR(nb) + 11;
+    const dx = sb.x - sa.x, dy = sb.y - sa.y;
+    const jog = ((ei % 5) - 2) * 11;
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      const sg = dx >= 0 ? 1 : -1;
+      const x0 = sa.x + sg * ra, x1 = sb.x - sg * rb;
+      let mid = (x0 + x1) / 2 + jog;
+      if (Math.abs(x1 - x0) < 26) mid = x0;
+      return [{ x: x0, y: sa.y }, { x: mid, y: sa.y }, { x: mid, y: sb.y }, { x: x1, y: sb.y }];
+    }
+    const sg = dy >= 0 ? 1 : -1;
+    const y0 = sa.y + sg * ra, y1 = sb.y - sg * rb;
+    let mid = (y0 + y1) / 2 + jog;
+    if (Math.abs(y1 - y0) < 26) mid = y0;
+    return [{ x: sa.x, y: y0 }, { x: sa.x, y: mid }, { x: sb.x, y: mid }, { x: sb.x, y: y1 }];
+  }
+
+  riskColor(v) {
+    if (v > 0.62) return "#b4552f";
+    if (v > 0.3) return "#597ea3";
+    return "#94bce3";
+  }
+
+  // same three bands, but at ramp steps that stay readable as small text
+  riskInk(v) {
+    if (v > 0.62) return "#8f3f20";
+    if (v > 0.3) return "#416180";
+    return "#5d5d60";
+  }
+
+  draw() {
+    const cv = this.canvas, ctx = this.ctx;
+    if (!cv || !ctx || !this.nodes || !this.nodes.length) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return; // not laid out yet — never size the buffer to zero
+    if (!this.cam.z) this.fit(w, h);
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      if (this.state.selected && this.nodeState[this.state.selected]) this.centerOn(this.state.selected);
+      else if (this.nodes && this.nodes.length) this.fitToNodes();
+      else this.fit(w, h);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const z = this.cam.z, ox = this.cam.x, oy = this.cam.y;
+    const X = function (x) { return x * z + ox; }, Y = function (y) { return y * z + oy; };
+    const ns = this.nodeState, focus = this.focusSets(), match = this.matchSet();
+    const risky = this.state.lens === "risk" || this.props.riskEmphasis;
+    const inFocus = function (id) {
+      if (match && !match[id] && !(focus && (focus.id === id))) return match[id] ? 1 : 0.12;
+      if (!focus) return 1;
+      if (focus.id === id) return 1;
+      if (focus.up[id] || focus.down[id]) return 0.95;
+      return 0.1;
+    };
+
+    // grid
+    ctx.strokeStyle = "rgba(29,31,32,0.055)"; ctx.lineWidth = 1;
+    const g = 80 * z;
+    if (g > 14) {
+      for (let x = ox % g; x < w; x += g) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+      for (let y = oy % g; y < h; y += g) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    }
+
+    // group frames
+    if (this.state.lens !== "flow" && this.groups) {
+      ctx.font = "600 " + Math.max(11, 13 * Math.min(1.4, z)) + "px 'Barlow Condensed', sans-serif";
+      this.groups.forEach(function (grp) {
+        if (!grp.nodes.length && !grp.empty) return;
+        let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+        if (grp.empty) { x0 = x1 = grp.empty.x; y0 = y1 = grp.empty.y; }
+        grp.nodes.forEach(function (n) {
+          const s = ns[n.id];
+          x0 = Math.min(x0, s.x); y0 = Math.min(y0, s.y); x1 = Math.max(x1, s.x); y1 = Math.max(y1, s.y);
+        });
+        const p = 54;
+        const a = X(x0 - p), b = Y(y0 - p), cw = (x1 - x0 + p * 2) * z, ch = (y1 - y0 + p * 2) * z;
+        ctx.strokeStyle = "rgba(29,31,32,0.16)"; ctx.lineWidth = 1;
+        ctx.strokeRect(Math.round(a) + 0.5, Math.round(b) + 0.5, Math.round(cw), Math.round(ch));
+        const t = 7;
+        ctx.strokeStyle = "rgba(29,31,32,0.4)";
+        [[a, b], [a + cw, b], [a, b + ch], [a + cw, b + ch]].forEach(function (c) {
+          ctx.beginPath(); ctx.moveTo(c[0] - t, c[1]); ctx.lineTo(c[0] + t, c[1]);
+          ctx.moveTo(c[0], c[1] - t); ctx.lineTo(c[0], c[1] + t); ctx.stroke();
+        });
+        ctx.fillStyle = "#5d5d60";
+        ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+        ctx.fillText(grp.label.toUpperCase(), a + 2, b - 7);
+        if (grp.empty) { ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("Nothing yet", a + cw / 2, b + ch / 2); }
+      });
+    }
+
+    // edges
+    const motion = this.props.motion !== false;
+    const labelRects = [];
+    if (this.state.lens === "journey") {
+      // reserve the space node labels will take, so hop chips never land on them
+      this.nodes.forEach(function (nd) {
+        const s = ns[nd.id];
+        if (!s) return;
+        const r = this.nodeR(nd) * z;
+        labelRects.push({ x: X(s.x), y: Y(s.y) + r + 12, w: nd.name.length * 7.5 * Math.min(1.25, z) });
+      }, this);
+    }
+    ctx.lineJoin = "miter"; ctx.lineCap = "butt";
+    this.edges.forEach(function (e, ei) {
+      const pts = this.edgePath(e, ei);
+      if (!pts) return;
+      const m = METHODS[e.method];
+      const o = Math.min(inFocus(e.a), inFocus(e.b));
+      const dirOK = !focus || (focus.id === e.a || focus.id === e.b || (focus.up[e.a] && focus.up[e.b]) || (focus.down[e.a] && focus.down[e.b]));
+      const alpha = o < 0.3 ? 0.06 : dirOK ? 0.9 : 0.16;
+
+      ctx.beginPath();
+      ctx.moveTo(X(pts[0].x), Y(pts[0].y));
+      for (let i = 1; i < pts.length; i++) ctx.lineTo(X(pts[i].x), Y(pts[i].y));
+      ctx.lineWidth = Math.max(0.9, Math.min(4, 0.7 + e.w * 0.4) * Math.min(1.5, z));
+      ctx.strokeStyle = m.color;
+      ctx.globalAlpha = alpha * 0.6;
+      ctx.setLineDash(m.dash ? m.dash.map(function (d) { return d * Math.min(1.6, z); }) : []);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // arrowhead on the last segment
+      const p1 = pts[pts.length - 2], p2 = pts[pts.length - 1];
+      const ang = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+      const ah = Math.max(4.5, 7 * Math.min(1.4, z));
+      ctx.beginPath();
+      ctx.moveTo(X(p2.x), Y(p2.y));
+      ctx.lineTo(X(p2.x) - Math.cos(ang - 0.42) * ah, Y(p2.y) - Math.sin(ang - 0.42) * ah);
+      ctx.lineTo(X(p2.x) - Math.cos(ang + 0.42) * ah, Y(p2.y) - Math.sin(ang + 0.42) * ah);
+      ctx.closePath();
+      ctx.fillStyle = m.color;
+      ctx.globalAlpha = alpha * 0.85;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      if (this.state.lens === "journey" && z > 0.4) {
+        let mp = pts[0], mq = pts[1], best = -1;
+        for (let i = 1; i < pts.length; i++) {
+          const L = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+          if (L > best) { best = L; mp = pts[i - 1]; mq = pts[i]; }
+        }
+        if (best >= 58) {
+        const lx = X((mp.x + mq.x) / 2), ly = Y((mp.y + mq.y) / 2);
+        const label = m.label.toUpperCase();
+        ctx.font = "600 " + Math.max(9, 11 * Math.min(1.2, z)) + "px 'Barlow Condensed', sans-serif";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        const horiz = Math.abs(mq.x - mp.x) > Math.abs(mq.y - mp.y);
+        const tw = ctx.measureText(label).width + 10;
+        let ly2 = horiz ? ly - 15 : ly, placed = false;
+        const hits = function (yy) {
+          return labelRects.some(function (r) {
+            return Math.abs(r.x - lx) < (r.w + tw) / 2 + 4 && Math.abs(r.y - yy) < 22;
+          });
+        };
+        for (let k = 0; k < 6 && !placed; k++) {
+          const cand = ly2 + (k % 2 ? 1 : -1) * 24 * Math.ceil(k / 2);
+          if (!hits(cand)) { ly2 = cand; placed = true; }
+        }
+        if (placed) {
+        labelRects.push({ x: lx, y: ly2, w: tw });
+        ctx.fillStyle = "#f2f2f3";
+        ctx.fillRect(lx - tw / 2, ly2 - 9, tw, 18);
+        ctx.strokeStyle = m.color; ctx.lineWidth = 1;
+        ctx.strokeRect(Math.round(lx - tw / 2) + 0.5, Math.round(ly2 - 9) + 0.5, Math.round(tw), 18);
+        ctx.fillStyle = m.risk > 1 ? m.color : "#1d1f20";
+        ctx.fillText(label, lx, ly2 + 1);
+        }
+        }
+      }
+
+      if (!motion || alpha < 0.3) return;
+      const segs = [];
+      let total = 0;
+      for (let i = 1; i < pts.length; i++) {
+        const len = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+        segs.push({ a: pts[i - 1], b: pts[i], len: len, at: total });
+        total += len;
+      }
+      if (!total) return;
+      const n = Math.min(4, Math.max(1, Math.round(e.w / 2)));
+      for (let k = 0; k < n; k++) {
+        const u = (((this.t * m.speed * 0.28) + k / n) % 1) * total;
+        let seg = segs[0];
+        for (let i = 0; i < segs.length; i++) if (u >= segs[i].at) seg = segs[i];
+        const f = seg.len ? (u - seg.at) / seg.len : 0;
+        const px = seg.a.x + (seg.b.x - seg.a.x) * f;
+        const py = seg.a.y + (seg.b.y - seg.a.y) * f;
+        ctx.beginPath();
+        ctx.arc(X(px), Y(py), Math.max(1.4, 2.4 * Math.min(1.4, z)), 0, Math.PI * 2);
+        ctx.fillStyle = m.color;
+        ctx.globalAlpha = alpha * (m.risk > 1 ? 0.95 : 0.8);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }, this);
+
+    // nodes
+    this.nodes.forEach(function (nd) {
+      const s = ns[nd.id];
+      const o = inFocus(nd.id);
+      const sel = this.state.selected === nd.id, hov = this.state.hover === nd.id;
+      const px = X(s.x), py = Y(s.y);
+      ctx.globalAlpha = o < 0.3 ? 0.16 : 1;
+      if (nd.kind === "container") {
+        const base = 15 + Math.min(16, (nd.inN + nd.outN) * 0.62);
+        const r = base * z * (risky ? 0.75 + nd.r01 * 0.7 : 1);
+        const col = risky ? this.riskColor(nd.r01) : "#416180";
+        ctx.beginPath();
+        ctx.rect(Math.round(px - r) + 0.5, Math.round(py - r) + 0.5, Math.round(r * 2), Math.round(r * 2));
+        ctx.fillStyle = sel ? col : risky ? (nd.r01 > 0.62 ? "rgba(180,85,47,0.16)" : "rgba(89,128,166,0.1)") : "rgba(242,242,243,0.92)";
+        ctx.fill();
+        ctx.strokeStyle = col;
+        ctx.lineWidth = sel || hov ? 2.2 : 1.3;
+        ctx.stroke();
+        if (r > 11) {
+          const t = Math.min(7, r * 0.42);
+          ctx.strokeStyle = sel ? "#f2f2f3" : "rgba(29,31,32,0.45)";
+          ctx.lineWidth = 1;
+          [[px - r, py - r], [px + r, py - r], [px - r, py + r], [px + r, py + r]].forEach(function (c) {
+            ctx.beginPath(); ctx.moveTo(c[0] - t, c[1]); ctx.lineTo(c[0] + t, c[1]);
+            ctx.moveTo(c[0], c[1] - t); ctx.lineTo(c[0], c[1] + t); ctx.stroke();
+          });
+        }
+        if (s.pin) {
+          ctx.beginPath();
+          ctx.moveTo(px - r - 4, py); ctx.lineTo(px - r - 4, py);
+          ctx.arc(px - r - 5, py, 2.6, 0, Math.PI * 2);
+          ctx.fillStyle = "#5980a6"; ctx.fill();
+        }
+        if (nd.verbal && !risky) {
+          ctx.beginPath(); ctx.arc(px + r, py - r, 3.2, 0, Math.PI * 2);
+          ctx.fillStyle = "#b4552f"; ctx.fill();
+        }
+        if (z > 0.44 || sel || hov || (focus && o > 0.9)) {
+          ctx.font = "600 " + Math.max(10, 13 * Math.min(1.25, z)) + "px 'Barlow Condensed', sans-serif";
+          ctx.textAlign = "center"; ctx.textBaseline = "top";
+          ctx.fillStyle = "#1d1f20";
+          ctx.fillText(nd.name.toUpperCase(), px, py + r + 5);
+          if (z > 0.85) {
+            ctx.font = "400 " + Math.max(9, 10.5 * Math.min(1.15, z)) + "px Barlow, sans-serif";
+            ctx.fillStyle = "#5d5d60";
+            ctx.fillText(nd.system, px, py + r + 5 + 14 * Math.min(1.25, z));
+          }
+        }
+      } else {
+        const r = (9 + Math.min(13, nd.placeN * 1.7)) * z * (risky ? 0.8 + nd.r01 * 0.6 : 1);
+        ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2);
+        ctx.fillStyle = sel ? (risky ? this.riskColor(nd.r01) : "#416180") : "#f2f2f3";
+        ctx.fill();
+        ctx.strokeStyle = risky ? this.riskColor(nd.r01) : "#749dc4";
+        ctx.lineWidth = sel || hov ? 2.2 : 1.2;
+        ctx.stroke();
+        if (z > 0.44 || sel || hov || (focus && o > 0.9)) {
+          ctx.font = "600 " + Math.max(10, 13 * Math.min(1.25, z)) + "px 'Barlow Condensed', sans-serif";
+          ctx.textAlign = "center"; ctx.textBaseline = "top";
+          ctx.fillStyle = "#1d1f20";
+          ctx.fillText(nd.name.toUpperCase(), px, py + r + 5);
+          if (z > 0.85) {
+            ctx.font = "400 " + Math.max(9, 10.5 * Math.min(1.15, z)) + "px Barlow, sans-serif";
+            ctx.fillStyle = "#5d5d60";
+            ctx.fillText(nd.placeN + " places", px, py + r + 5 + 14 * Math.min(1.25, z));
+          }
+        }
+      }
+      ctx.globalAlpha = 1;
+    }, this);
+  }
+
+  fit(w, h) {
+    const z = Math.min(w / (WORLD.w + 120), h / (WORLD.h + 160));
+    this.cam.z = z;
+    this.cam.x = (w - WORLD.w * z) / 2;
+    this.cam.y = (h - WORLD.h * z) / 2;
+  }
+
+  // frame the settled nodes, not the whole world, and never below label legibility
+  fitToNodes() {
+    const cv = this.canvas;
+    if (!cv || !this.nodes || !this.nodes.length) return;
+    const w = cv.clientWidth, h = cv.clientHeight, ns = this.nodeState;
+    if (!w || !h) return;
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    this.nodes.forEach(function (n) {
+      const s = ns[n.id];
+      if (!s) return;
+      const px = n.tx != null ? n.tx : s.x, py = n.ty != null ? n.ty : s.y;
+      x0 = Math.min(x0, px); y0 = Math.min(y0, py);
+      x1 = Math.max(x1, px); y1 = Math.max(y1, py);
+    });
+    const pad = 96;
+    const bw = x1 - x0 + pad * 2, bh = y1 - y0 + pad * 2;
+    // legibility first: never shrink past readable type — overflow is pannable
+    const floor = this.nodes.length <= 12 ? 0.46 : 0.62;
+    let z = Math.min(1.45, Math.min(w / bw, h / bh));
+    if (z < floor) z = floor;
+    this.cam.z = z;
+    this.cam.x = bw * z <= w ? w / 2 - ((x0 + x1) / 2) * z : pad * z - x0 * z;
+    this.cam.y = bh * z <= h ? h / 2 - ((y0 + y1) / 2) * z : pad * z - y0 * z;
+    this.autofitted = true;
+  }
+
+  /* ---------- lifecycle ---------- */
+  componentDidMount() {
+    this.loadData();
+    this.initCanvas(document.getElementById("atlas-canvas"));
+    if (!this.canvas) {
+      let tries = 0;
+      const wait = function () {
+        if (this.canvas || tries++ > 200) return;
+        this.initCanvas(document.getElementById("atlas-canvas"));
+        if (!this.canvas) requestAnimationFrame(wait);
+      }.bind(this);
+      requestAnimationFrame(wait);
+    }
+  }
+
+  // The inline arrays above are only the built-in demo. Real data comes from
+  // flow-map.json (same shape as your tool's export) — see SCHEMA.md.
+  loadData() {
+    // Opened from Map Intake: use the map handed over in this browser, not the demo file.
+    let hand = null;
+    if (/from=intake/.test(location.search + location.hash)) {
+      try { hand = JSON.parse(localStorage.getItem("ifm-atlas-handoff") || "null"); } catch (e) {}
+    }
+    (hand ? Promise.resolve(hand) : fetch("flow-map.json").then(function (r) {
+      return r.ok ? r.json() : null;
+    })).then(function (d) {
+      if (!d || !d.containers || !d.containers.length) return;
+      this.dataName = d.name || null;
+      const stepOrder = {};
+      (d.steps || []).forEach(function (s, i) { stepOrder[s.id] = s.order != null ? s.order : i; });
+      if (d.steps && d.steps.length) {
+        STEPS.length = 0;
+        d.steps.slice().sort(function (a, b) { return stepOrder[a.id] - stepOrder[b.id]; })
+          .forEach(function (s) { STEPS.push(s.label); });
+      }
+      (d.methods || []).forEach(function (m) {
+        const base = METHODS[m.id] || METHODS.key;
+        METHODS[m.id] = {
+          label: m.label, speed: m.speed != null ? m.speed : base.speed, risk: m.risk != null ? m.risk : base.risk,
+          dash: m.style === "dotted" ? [2, 7] : m.style === "dashed" ? [7, 6] : null,
+          color: m.style === "dotted" ? "#b4552f" : m.style === "dashed" ? "#749dc4" : "#416180",
+          ink: m.style === "dotted" ? "#8f3f20" : m.style === "dashed" ? "#2c455d" : "#416180"
+        };
+      });
+      CONTAINERS.length = 0;
+      d.containers.forEach(function (c) {
+        CONTAINERS.push([c.id, c.name, stepOrder[c.step] || 0, c.owner, c.system, c.category || c.owner, c.fields || []]);
+      });
+      INFOS.length = 0;
+      (d.information || []).forEach(function (n) { INFOS.push([n.id, n.name, n.category || "\u2014"]); });
+      FLOWS.length = 0;
+      (d.transfers || []).forEach(function (t) { FLOWS.push([t.information, t.from, t.to, t.method]); });
+      this.build();
+      this.setState({ selected: null, hover: null, trace: INFOS.length ? INFOS[0][0] : null });
+      this.layout();
+    }.bind(this)).catch(function () {});
+  }
+
+  initCanvas(cv) {
+    if (!cv) return;
+    const sameCanvas = this.canvas === cv;
+    if (sameCanvas && this.running) return;
+    this.canvas = cv;
+    this.ctx = cv.getContext("2d");
+    this.running = true;
+    if (cv.clientWidth > 0 && cv.clientHeight > 0) this.fit(cv.clientWidth, cv.clientHeight);
+    this.layout();
+    if (!this.ro && window.ResizeObserver) {
+      this.ro = new ResizeObserver(function () {
+        if (!this.canvas || !this.canvas.clientWidth) return;
+        if (!this.nodes || !this.nodes.length) this.layout();
+        if (!this.sized) { this.sized = true; this.layout(); }
+        if (this.state.selected) this.centerOn(this.state.selected);
+        else if (!this.cam.z || !this.userMoved) this.fitToNodes();
+        if (this.frame) this.frame(0);
+      }.bind(this));
+      this.ro.observe(cv);
+    }
+    if (sameCanvas) { this.startLoop(); return; }
+
+    const toWorld = function (ev) {
+      const rc = cv.getBoundingClientRect();
+      return { x: (ev.clientX - rc.left - this.cam.x) / this.cam.z, y: (ev.clientY - rc.top - this.cam.y) / this.cam.z };
+    }.bind(this);
+    const pick = function (p) {
+      let best = null, bd = 40;
+      this.nodes.forEach(function (n) {
+        const s = this.nodeState[n.id];
+        const d = Math.hypot(s.x - p.x, s.y - p.y);
+        const rr = n.kind === "container" ? 26 + (n.inN + n.outN) * 0.5 : 16;
+        if (d < rr && d < bd) { bd = d; best = n; }
+      }, this);
+      return best;
+    }.bind(this);
+
+    let drag = null;
+    cv.addEventListener("mousedown", function (ev) {
+      const node = pick(toWorld(ev));
+      drag = { x: ev.clientX, y: ev.clientY, moved: 0, node: node };
+      if (node) { this.dragging = true; cv.style.cursor = "grabbing"; }
+    }.bind(this));
+    cv.addEventListener("dblclick", function (ev) {
+      const n = pick(toWorld(ev));
+      if (n && this.nodeState[n.id]) { this.nodeState[n.id].pin = false; this.kick(); this.frame(0); }
+    }.bind(this));
+    window.addEventListener("mouseup", function (ev) {
+      if (drag && drag.moved < 5) {
+        const n = pick(toWorld(ev));
+        if (ev.target === cv) this.setState({ selected: n ? n.id : null });
+      }
+      if (drag && drag.node && drag.moved >= 5) {
+        const s = this.nodeState[drag.node.id];
+        if (s) { s.pin = true; s.vx = 0; s.vy = 0; }
+        this.kick();
+      }
+      this.dragging = false;
+      cv.style.cursor = "";
+      drag = null;
+    }.bind(this));
+    cv.addEventListener("mousemove", function (ev) {
+      if (drag && drag.node) {
+        drag.moved += Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y);
+        drag.x = ev.clientX; drag.y = ev.clientY;
+        const p = toWorld(ev), s = this.nodeState[drag.node.id];
+        if (s) { s.x = p.x; s.y = p.y; s.vx = 0; s.vy = 0; s.pin = true; }
+        this.frame(0);
+        return;
+      }
+      if (drag) {
+        drag.moved += Math.abs(ev.clientX - drag.x) + Math.abs(ev.clientY - drag.y);
+        this.cam.x += ev.clientX - drag.x; this.cam.y += ev.clientY - drag.y;
+        drag.x = ev.clientX; drag.y = ev.clientY;
+        this.userMoved = true;
+        this.frame(0);
+        return;
+      }
+      const n = pick(toWorld(ev));
+      const id = n ? n.id : null;
+      cv.style.cursor = n ? "move" : "";
+      if (id !== this.state.hover) this.setState({ hover: id });
+    }.bind(this));
+    cv.addEventListener("mouseleave", function () { if (this.state.hover) this.setState({ hover: null }); }.bind(this));
+    cv.addEventListener("wheel", function (ev) {
+      ev.preventDefault();
+      const rc = cv.getBoundingClientRect();
+      const mx = ev.clientX - rc.left, my = ev.clientY - rc.top;
+      const f = Math.exp(-ev.deltaY * 0.0016);
+      const nz = Math.max(0.25, Math.min(3.2, this.cam.z * f));
+      const k = nz / this.cam.z;
+      this.cam.x = mx - (mx - this.cam.x) * k;
+      this.cam.y = my - (my - this.cam.y) * k;
+      this.cam.z = nz;
+      this.userMoved = true;
+      this.frame(0);
+    }.bind(this), { passive: false });
+
+    this.startLoop();
+  }
+
+  startLoop() {
+    cancelAnimationFrame(this.raf);
+    clearInterval(this.iv);
+    this.running = true;
+
+    const frame = function (dt) {
+      this.t += dt;
+      if (!this.nodes || !this.nodes.length) this.layout(); // never let a race leave the board empty
+      try { this.tick(); this.draw(); } catch (err) { /* a bad frame must not kill the loop */ }
+      this.lastFrame = Date.now();
+    }.bind(this);
+    this.frame = frame;
+
+    // settle the first arrangement, then paint one static frame immediately —
+    // rAF is throttled in hidden/offscreen frames, so the map must never depend on it
+    for (let i = 0; i < 160; i++) this.tick();
+    frame(0);
+
+    const loop = function () {
+      frame(1 / 60);
+      this.raf = requestAnimationFrame(loop);
+    }.bind(this);
+    this.raf = requestAnimationFrame(loop);
+    this.iv = setInterval(function () {
+      if (Date.now() - (this.lastFrame || 0) < 260) return;
+      try { for (let i = 0; i < 24; i++) this.tick(); } catch (err) { /* keep the ticker alive */ }
+      frame(0.2);
+    }.bind(this), 250);
+  }
+
+  componentDidUpdate(prev) {
+    if (!this.canvas) return;
+    if (prev.lens !== this.state.lens || prev.mode !== this.state.mode || prev.trace !== this.state.trace ||
+        prev.offOwners !== this.state.offOwners || prev.collapsed !== this.state.collapsed) this.layout();
+    if (prev.selected !== this.state.selected && this.state.selected) this.centerOn(this.state.selected);
+    if (this.frame) this.frame(0);
+  }
+
+  centerOn(id) {
+    const s = this.nodeState[id], cv = this.canvas;
+    if (!s || !cv || !cv.clientWidth) return;
+    this.cam.x = cv.clientWidth / 2 - s.x * this.cam.z;
+    this.cam.y = cv.clientHeight / 2 - s.y * this.cam.z;
+  }
+
+  componentWillUnmount() {
+    this.running = false;
+    cancelAnimationFrame(this.raf);
+    clearInterval(this.iv);
+    if (this.ro) { this.ro.disconnect(); this.ro = null; }
+  }
+
+  /* ---------- panel data ---------- */
+  selPayload() {
+    const id = this.state.selected;
+    if (!id) return null;
+    const node = this.cById[id] || this.iById[id];
+    if (!node) return null;
+    const mk = function (f, other) {
+      const m = METHODS[f.method];
+      return { info: this.iById[f.info].name, method: m.label, color: m.ink, other: other };
+    }.bind(this);
+    if (node.kind === "container") {
+      const inb = this.flows.filter(function (f) { return f.to === id; })
+        .map(function (f) { return mk(f, "from " + this.cById[f.from].name); }, this);
+      const outb = this.flows.filter(function (f) { return f.from === id; })
+        .map(function (f) { return mk(f, "to " + this.cById[f.to].name); }, this);
+      const worst = node.verbal ? "verbal handoffs" : node.keyed ? "hand-keyed fields" : "automatic feeds";
+      return {
+        kicker: "Container \u00b7 step " + (node.step + 1) + " \u00b7 " + STEPS[node.step],
+        name: node.name, meta: "Owned by " + node.owner + " \u00b7 lives in " + node.system,
+        tagA: node.inN + " in", tagB: node.outN + " out",
+        riskColor: this.riskInk(node.r01),
+        riskLabel: node.r01 > 0.62 ? "High risk" : node.r01 > 0.3 ? "Watch" : "Clean",
+        inTitle: "Arrives here (" + inb.length + ")", outTitle: "Leaves here (" + outb.length + ")",
+        inbound: inb, outbound: outb,
+        diagnosis: node.keyed + " field(s) are re-entered by hand and " + node.verbal +
+          " arrive verbally, so this container's dominant failure mode is " + worst +
+          ". Everything downstream inherits whatever error enters here."
+      };
+    }
+    const chain = this.flows.filter(function (f) { return f.info === id; });
+    const inb = chain.map(function (f) {
+      return { info: this.cById[f.from].name + " \u2192 " + this.cById[f.to].name, method: METHODS[f.method].label, color: METHODS[f.method].ink, other: "step " + (this.cById[f.from].step + 1) + " \u2192 " + (this.cById[f.to].step + 1) };
+    }, this);
+    return {
+      kicker: "Information field \u00b7 " + node.cat,
+      name: node.name, meta: "Kept in " + node.placeN + " containers \u00b7 " + chain.length + " transfers",
+      tagA: node.keyed + " hand-keyed", tagB: node.verbal + " verbal",
+      riskColor: this.riskInk(node.r01),
+      riskLabel: node.r01 > 0.62 ? "High risk" : node.r01 > 0.3 ? "Watch" : "Clean",
+      inTitle: "Its whole journey (" + chain.length + ")", outTitle: "Where it lives",
+      inbound: inb,
+      outbound: Object.keys(node.places).map(function (p) {
+        const c = this.cById[p];
+        return { info: c.name, method: c.system, color: "#5d5d60", other: c.owner + " \u00b7 step " + (c.step + 1) };
+      }, this),
+      diagnosis: "This one field is maintained in " + node.placeN + " places. " +
+        (node.keyed ? node.keyed + " of those copies are typed in by hand \u2014 each is a chance for the shop to run the wrong number." : "It moves without manual re-entry, so the copies stay in step.")
+    };
+  }
+
+  renderVals() {
+    const st = this.state, on = "var(--color-accent)", off = "transparent";
+    const lensCls = function (l) { return st.lens === l ? "btn-primary" : "btn-secondary"; };
+    const setLens = function (l) { return function () { this.setState({ lens: l, hover: null }); }.bind(this); }.bind(this);
+    const ranked = this.containers.slice().sort(function (a, b) { return b.r01 - a.r01; }).slice(0, 6);
+    const ownerNames = [];
+    this.containers.forEach(function (c) { if (ownerNames.indexOf(c.owner) < 0) ownerNames.push(c.owner); });
+    const sel = this.selPayload();
+    const hoverNode = st.hover ? (this.cById[st.hover] || this.iById[st.hover]) : null;
+
+    return {
+      canvasRef: function (el) { if (el) this.initCanvas(el); }.bind(this),
+      isContainers: st.mode === "containers",
+      isInformation: st.mode === "information",
+      mkCollapse: st.collapsed ? on : off,
+      clsFlow: lensCls("flow"), clsStep: lensCls("step"), clsOwner: lensCls("owner"),
+      clsSystem: lensCls("system"), clsType: lensCls("type"), clsRisk: lensCls("risk"),
+      clsJourney: lensCls("journey"),
+      headerCounts: this.containers.length + " containers \u00b7 " + this.infos.length +
+        " information items \u00b7 " + this.flows.length + " transfers",
+      mapName: (this.dataName || "Dave's Map") + " \u2014 Information Flow Atlas",
+      lensNote: LENS_NOTES[st.lens],
+      modeNote: st.mode === "containers"
+        ? "Showing containers only. A line is a transfer of information from one container to the next."
+        : "Showing information fields only. A line means two fields travel in the same transfer \u2014 thick bundles belong in one record; node size is how many containers keep that field.",
+      searchNote: (function () {
+        const q = st.q.trim().toLowerCase();
+        if (!q) return "";
+        const n = this.containers.concat(this.infos).filter(function (x) {
+          return x.name.toLowerCase().indexOf(q) >= 0;
+        }).length;
+        return n ? n + (n === 1 ? " match" : " matches") : "No matches";
+      }).call(this),
+      modeContainers: function () { this.setState({ mode: "containers", selected: null, hover: null }); }.bind(this),
+      modeInformation: function () { this.setState({ mode: "information", selected: null, hover: null }); }.bind(this),
+      lensFlow: setLens("flow"), lensStep: setLens("step"), lensOwner: setLens("owner"),
+      lensSystem: setLens("system"), lensType: setLens("type"), lensRisk: setLens("risk"),
+      lensJourney: setLens("journey"),
+      isJourney: st.lens === "journey",
+      traceFields: this.infos.map(function (n) {
+        const hops = this.flows.filter(function (f) { return f.info === n.id; }).length;
+        return {
+          name: n.name, hops: hops + " hops \u00b7 " + n.placeN + " places",
+          cls: st.trace === n.id ? "btn-primary" : "btn-secondary",
+          pick: function () { this.setState({ trace: n.id, lens: "journey", selected: null, hover: null }); }.bind(this)
+        };
+      }, this),
+      toggleCollapse: function () { this.setState({ collapsed: !st.collapsed, selected: null, hover: null }); }.bind(this),
+      resetView: function () {
+        this.userMoved = false;
+        this.fitToNodes();
+        this.setState({ selected: null, q: "" });
+        const f = document.getElementById("atlas-search"); if (f) f.value = "";
+      }.bind(this),
+      retidy: function () {
+        Object.keys(this.nodeState).forEach(function (k) { this.nodeState[k].pin = false; }, this);
+        this.layout();
+        if (this.frame) { for (let i = 0; i < 40; i++) this.tick(); this.frame(0); }
+      }.bind(this),
+      onSearch: function (ev) { this.setState({ q: ev.target.value }); }.bind(this),
+      statusLine: hoverNode ? hoverNode.name + (hoverNode.kind === "container" ? " \u00b7 " + hoverNode.system : " \u00b7 " + hoverNode.placeN + " places") :
+        st.lens === "journey" ? "Following " + (this.iById[st.trace] ? this.iById[st.trace].name : "\u2014") + " through the shop" :
+        (st.mode === "containers" ? "Containers and the transfers between them" : "Fields, joined where they travel together"),
+      topRisk: ranked.map(function (c) {
+        return {
+          name: c.name, label: c.verbal ? c.verbal + " verbal" : c.keyed + " rekeyed",
+          color: this.riskInk(c.r01),
+          pick: function () { this.setState({ selected: c.id, lens: "risk" }); }.bind(this)
+        };
+      }, this),
+      owners: ownerNames.map(function (o) {
+        const offd = st.offOwners.indexOf(o) >= 0;
+        return {
+          name: o, cls: offd ? "tag-outline" : "tag-accent",
+          toggle: function () {
+            const next = offd ? st.offOwners.filter(function (x) { return x !== o; }) : st.offOwners.concat([o]);
+            this.setState({ offOwners: next, selected: null });
+          }.bind(this)
+        };
+      }, this),
+      hasSelection: !!sel,
+      sel: sel || {},
+      clearSelection: function () { this.setState({ selected: null }); }.bind(this)
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,927 @@
+{
+  "version": 1,
+  "name": "Dave's Map — mixed office & shop-floor process",
+  "steps": [
+    {
+      "id": "s1",
+      "order": 0,
+      "label": "Quote"
+    },
+    {
+      "id": "s2",
+      "order": 1,
+      "label": "Receive PO"
+    },
+    {
+      "id": "s3",
+      "order": 2,
+      "label": "Job Number"
+    },
+    {
+      "id": "s4",
+      "order": 3,
+      "label": "Engineering release"
+    },
+    {
+      "id": "s5",
+      "order": 4,
+      "label": "Purchasing"
+    },
+    {
+      "id": "s6",
+      "order": 5,
+      "label": "Scheduling"
+    },
+    {
+      "id": "s7",
+      "order": 6,
+      "label": "Production"
+    },
+    {
+      "id": "s8",
+      "order": 7,
+      "label": "Inspection"
+    },
+    {
+      "id": "s9",
+      "order": 8,
+      "label": "Ship & invoice"
+    }
+  ],
+  "methods": [
+    {
+      "id": "gen",
+      "label": "Generated here",
+      "manual": false,
+      "speed": 0.5,
+      "style": "solid",
+      "risk": 0
+    },
+    {
+      "id": "auto",
+      "label": "Copied automatically",
+      "manual": false,
+      "speed": 0.58,
+      "style": "solid",
+      "risk": 0.2
+    },
+    {
+      "id": "recv",
+      "label": "Received",
+      "manual": false,
+      "speed": 0.4,
+      "style": "solid",
+      "risk": 0.5
+    },
+    {
+      "id": "scan",
+      "label": "Scanned / re-entered",
+      "manual": true,
+      "speed": 0.24,
+      "style": "dashed",
+      "risk": 1.5
+    },
+    {
+      "id": "key",
+      "label": "Typed in by hand",
+      "manual": true,
+      "speed": 0.17,
+      "style": "dashed",
+      "risk": 2.2
+    },
+    {
+      "id": "verbal",
+      "label": "Verbal / tribal",
+      "manual": true,
+      "speed": 0.1,
+      "style": "dotted",
+      "risk": 3.4
+    }
+  ],
+  "containers": [
+    {
+      "id": "c1",
+      "name": "RFQ Email",
+      "step": "s1",
+      "owner": "Customer Care",
+      "system": "Email",
+      "category": "Commercial"
+    },
+    {
+      "id": "c2",
+      "name": "Quote Sheet",
+      "step": "s1",
+      "owner": "Estimating",
+      "system": "Excel",
+      "category": "Commercial"
+    },
+    {
+      "id": "c3",
+      "name": "PO PDF",
+      "step": "s2",
+      "owner": "Customer Care",
+      "system": "Paper / PDF",
+      "category": "Commercial"
+    },
+    {
+      "id": "c4",
+      "name": "Order Inbox",
+      "step": "s2",
+      "owner": "Customer Care",
+      "system": "Email",
+      "category": "Commercial"
+    },
+    {
+      "id": "c5",
+      "name": "Job Log",
+      "step": "s3",
+      "owner": "Customer Care",
+      "system": "Excel",
+      "category": "Commercial"
+    },
+    {
+      "id": "c6",
+      "name": "ERP Sales Order",
+      "step": "s3",
+      "owner": "Customer Care",
+      "system": "ERP",
+      "category": "Commercial"
+    },
+    {
+      "id": "c7",
+      "name": "Drawing Package",
+      "step": "s4",
+      "owner": "Engineering",
+      "system": "PDF Vault",
+      "category": "Engineering"
+    },
+    {
+      "id": "c8",
+      "name": "Bill of Materials",
+      "step": "s4",
+      "owner": "Engineering",
+      "system": "Excel",
+      "category": "Engineering"
+    },
+    {
+      "id": "c9",
+      "name": "Router Sheet",
+      "step": "s4",
+      "owner": "Engineering",
+      "system": "Paper / PDF",
+      "category": "Engineering"
+    },
+    {
+      "id": "c10",
+      "name": "Supplier RFQ",
+      "step": "s5",
+      "owner": "Purchasing",
+      "system": "Email",
+      "category": "Supply"
+    },
+    {
+      "id": "c11",
+      "name": "Supplier PO",
+      "step": "s5",
+      "owner": "Purchasing",
+      "system": "ERP",
+      "category": "Supply"
+    },
+    {
+      "id": "c12",
+      "name": "Receiving Log",
+      "step": "s5",
+      "owner": "Receiving",
+      "system": "Paper / PDF",
+      "category": "Supply"
+    },
+    {
+      "id": "c13",
+      "name": "Schedule Whiteboard",
+      "step": "s6",
+      "owner": "Planning",
+      "system": "Whiteboard",
+      "category": "Scheduling"
+    },
+    {
+      "id": "c14",
+      "name": "ERP Work Order",
+      "step": "s6",
+      "owner": "Planning",
+      "system": "ERP",
+      "category": "Scheduling"
+    },
+    {
+      "id": "c15",
+      "name": "Shop Traveler",
+      "step": "s7",
+      "owner": "Machining",
+      "system": "Paper / PDF",
+      "category": "Scheduling"
+    },
+    {
+      "id": "c16",
+      "name": "Setup Sheet",
+      "step": "s7",
+      "owner": "Machining",
+      "system": "Excel",
+      "category": "Engineering"
+    },
+    {
+      "id": "c17",
+      "name": "CNC Controller",
+      "step": "s7",
+      "owner": "Machining",
+      "system": "Machine",
+      "category": "Engineering"
+    },
+    {
+      "id": "c18",
+      "name": "Shift Pass-down",
+      "step": "s7",
+      "owner": "Machining",
+      "system": "In someone's head",
+      "category": "Scheduling"
+    },
+    {
+      "id": "c19",
+      "name": "Inspection Report",
+      "step": "s8",
+      "owner": "Quality",
+      "system": "Paper / PDF",
+      "category": "Quality"
+    },
+    {
+      "id": "c20",
+      "name": "CMM Output",
+      "step": "s8",
+      "owner": "Quality",
+      "system": "Machine",
+      "category": "Quality"
+    },
+    {
+      "id": "c21",
+      "name": "Cert Package",
+      "step": "s8",
+      "owner": "Quality",
+      "system": "PDF Vault",
+      "category": "Quality"
+    },
+    {
+      "id": "c22",
+      "name": "Packing Slip",
+      "step": "s9",
+      "owner": "Shipping",
+      "system": "ERP",
+      "category": "Logistics"
+    },
+    {
+      "id": "c23",
+      "name": "Invoice",
+      "step": "s9",
+      "owner": "Accounting",
+      "system": "ERP",
+      "category": "Logistics"
+    },
+    {
+      "id": "c24",
+      "name": "Customer Portal",
+      "step": "s9",
+      "owner": "Customer Care",
+      "system": "Web",
+      "category": "Logistics"
+    }
+  ],
+  "information": [
+    {
+      "id": "i1",
+      "name": "Customer",
+      "category": "Commercial"
+    },
+    {
+      "id": "i2",
+      "name": "PO #",
+      "category": "Commercial"
+    },
+    {
+      "id": "i3",
+      "name": "Part #",
+      "category": "Engineering"
+    },
+    {
+      "id": "i4",
+      "name": "Revision",
+      "category": "Engineering"
+    },
+    {
+      "id": "i5",
+      "name": "Quantity",
+      "category": "Commercial"
+    },
+    {
+      "id": "i6",
+      "name": "Price",
+      "category": "Commercial"
+    },
+    {
+      "id": "i7",
+      "name": "Due Date",
+      "category": "Scheduling"
+    },
+    {
+      "id": "i8",
+      "name": "Job Number",
+      "category": "Commercial"
+    },
+    {
+      "id": "i9",
+      "name": "Material Spec",
+      "category": "Engineering"
+    },
+    {
+      "id": "i10",
+      "name": "Lot / Heat #",
+      "category": "Quality"
+    },
+    {
+      "id": "i11",
+      "name": "Lead Time",
+      "category": "Supply"
+    },
+    {
+      "id": "i12",
+      "name": "Work Center",
+      "category": "Scheduling"
+    },
+    {
+      "id": "i13",
+      "name": "Setup Time",
+      "category": "Scheduling"
+    },
+    {
+      "id": "i14",
+      "name": "Tooling List",
+      "category": "Engineering"
+    },
+    {
+      "id": "i15",
+      "name": "Operator Notes",
+      "category": "Scheduling"
+    },
+    {
+      "id": "i16",
+      "name": "Inspection Dims",
+      "category": "Quality"
+    },
+    {
+      "id": "i17",
+      "name": "Nonconformance",
+      "category": "Quality"
+    },
+    {
+      "id": "i18",
+      "name": "Ship Date",
+      "category": "Logistics"
+    },
+    {
+      "id": "i19",
+      "name": "Tracking #",
+      "category": "Logistics"
+    },
+    {
+      "id": "i20",
+      "name": "Invoice #",
+      "category": "Logistics"
+    }
+  ],
+  "transfers": [
+    {
+      "information": "i1",
+      "from": "c1",
+      "to": "c2",
+      "method": "key"
+    },
+    {
+      "information": "i1",
+      "from": "c3",
+      "to": "c5",
+      "method": "key"
+    },
+    {
+      "information": "i1",
+      "from": "c5",
+      "to": "c6",
+      "method": "key"
+    },
+    {
+      "information": "i1",
+      "from": "c6",
+      "to": "c22",
+      "method": "auto"
+    },
+    {
+      "information": "i1",
+      "from": "c6",
+      "to": "c23",
+      "method": "auto"
+    },
+    {
+      "information": "i2",
+      "from": "c4",
+      "to": "c3",
+      "method": "recv"
+    },
+    {
+      "information": "i2",
+      "from": "c3",
+      "to": "c5",
+      "method": "key"
+    },
+    {
+      "information": "i2",
+      "from": "c5",
+      "to": "c6",
+      "method": "key"
+    },
+    {
+      "information": "i2",
+      "from": "c6",
+      "to": "c22",
+      "method": "auto"
+    },
+    {
+      "information": "i2",
+      "from": "c6",
+      "to": "c23",
+      "method": "auto"
+    },
+    {
+      "information": "i2",
+      "from": "c3",
+      "to": "c24",
+      "method": "scan"
+    },
+    {
+      "information": "i3",
+      "from": "c1",
+      "to": "c2",
+      "method": "key"
+    },
+    {
+      "information": "i3",
+      "from": "c3",
+      "to": "c5",
+      "method": "key"
+    },
+    {
+      "information": "i3",
+      "from": "c5",
+      "to": "c7",
+      "method": "key"
+    },
+    {
+      "information": "i3",
+      "from": "c7",
+      "to": "c8",
+      "method": "auto"
+    },
+    {
+      "information": "i3",
+      "from": "c7",
+      "to": "c9",
+      "method": "auto"
+    },
+    {
+      "information": "i3",
+      "from": "c9",
+      "to": "c15",
+      "method": "auto"
+    },
+    {
+      "information": "i3",
+      "from": "c15",
+      "to": "c16",
+      "method": "key"
+    },
+    {
+      "information": "i3",
+      "from": "c16",
+      "to": "c17",
+      "method": "key"
+    },
+    {
+      "information": "i3",
+      "from": "c19",
+      "to": "c21",
+      "method": "auto"
+    },
+    {
+      "information": "i4",
+      "from": "c7",
+      "to": "c9",
+      "method": "auto"
+    },
+    {
+      "information": "i4",
+      "from": "c9",
+      "to": "c15",
+      "method": "auto"
+    },
+    {
+      "information": "i4",
+      "from": "c15",
+      "to": "c18",
+      "method": "verbal"
+    },
+    {
+      "information": "i4",
+      "from": "c7",
+      "to": "c16",
+      "method": "key"
+    },
+    {
+      "information": "i4",
+      "from": "c19",
+      "to": "c21",
+      "method": "auto"
+    },
+    {
+      "information": "i5",
+      "from": "c3",
+      "to": "c5",
+      "method": "key"
+    },
+    {
+      "information": "i5",
+      "from": "c5",
+      "to": "c6",
+      "method": "key"
+    },
+    {
+      "information": "i5",
+      "from": "c6",
+      "to": "c14",
+      "method": "auto"
+    },
+    {
+      "information": "i5",
+      "from": "c14",
+      "to": "c15",
+      "method": "auto"
+    },
+    {
+      "information": "i5",
+      "from": "c15",
+      "to": "c19",
+      "method": "key"
+    },
+    {
+      "information": "i5",
+      "from": "c6",
+      "to": "c22",
+      "method": "auto"
+    },
+    {
+      "information": "i6",
+      "from": "c2",
+      "to": "c1",
+      "method": "key"
+    },
+    {
+      "information": "i6",
+      "from": "c3",
+      "to": "c5",
+      "method": "key"
+    },
+    {
+      "information": "i6",
+      "from": "c5",
+      "to": "c6",
+      "method": "key"
+    },
+    {
+      "information": "i6",
+      "from": "c6",
+      "to": "c23",
+      "method": "auto"
+    },
+    {
+      "information": "i7",
+      "from": "c3",
+      "to": "c5",
+      "method": "key"
+    },
+    {
+      "information": "i7",
+      "from": "c5",
+      "to": "c6",
+      "method": "key"
+    },
+    {
+      "information": "i7",
+      "from": "c6",
+      "to": "c13",
+      "method": "key"
+    },
+    {
+      "information": "i7",
+      "from": "c13",
+      "to": "c14",
+      "method": "key"
+    },
+    {
+      "information": "i7",
+      "from": "c14",
+      "to": "c15",
+      "method": "auto"
+    },
+    {
+      "information": "i7",
+      "from": "c13",
+      "to": "c18",
+      "method": "verbal"
+    },
+    {
+      "information": "i8",
+      "from": "c5",
+      "to": "c6",
+      "method": "gen"
+    },
+    {
+      "information": "i8",
+      "from": "c5",
+      "to": "c9",
+      "method": "key"
+    },
+    {
+      "information": "i8",
+      "from": "c5",
+      "to": "c10",
+      "method": "key"
+    },
+    {
+      "information": "i8",
+      "from": "c6",
+      "to": "c14",
+      "method": "auto"
+    },
+    {
+      "information": "i8",
+      "from": "c14",
+      "to": "c15",
+      "method": "auto"
+    },
+    {
+      "information": "i8",
+      "from": "c15",
+      "to": "c19",
+      "method": "key"
+    },
+    {
+      "information": "i8",
+      "from": "c19",
+      "to": "c21",
+      "method": "auto"
+    },
+    {
+      "information": "i8",
+      "from": "c6",
+      "to": "c22",
+      "method": "auto"
+    },
+    {
+      "information": "i8",
+      "from": "c6",
+      "to": "c23",
+      "method": "auto"
+    },
+    {
+      "information": "i9",
+      "from": "c7",
+      "to": "c8",
+      "method": "auto"
+    },
+    {
+      "information": "i9",
+      "from": "c8",
+      "to": "c10",
+      "method": "key"
+    },
+    {
+      "information": "i9",
+      "from": "c10",
+      "to": "c11",
+      "method": "auto"
+    },
+    {
+      "information": "i9",
+      "from": "c11",
+      "to": "c12",
+      "method": "auto"
+    },
+    {
+      "information": "i9",
+      "from": "c12",
+      "to": "c21",
+      "method": "scan"
+    },
+    {
+      "information": "i10",
+      "from": "c12",
+      "to": "c19",
+      "method": "key"
+    },
+    {
+      "information": "i10",
+      "from": "c12",
+      "to": "c21",
+      "method": "scan"
+    },
+    {
+      "information": "i10",
+      "from": "c19",
+      "to": "c21",
+      "method": "auto"
+    },
+    {
+      "information": "i10",
+      "from": "c12",
+      "to": "c18",
+      "method": "verbal"
+    },
+    {
+      "information": "i11",
+      "from": "c10",
+      "to": "c11",
+      "method": "key"
+    },
+    {
+      "information": "i11",
+      "from": "c11",
+      "to": "c13",
+      "method": "verbal"
+    },
+    {
+      "information": "i11",
+      "from": "c13",
+      "to": "c14",
+      "method": "key"
+    },
+    {
+      "information": "i12",
+      "from": "c9",
+      "to": "c13",
+      "method": "key"
+    },
+    {
+      "information": "i12",
+      "from": "c13",
+      "to": "c14",
+      "method": "key"
+    },
+    {
+      "information": "i12",
+      "from": "c14",
+      "to": "c15",
+      "method": "auto"
+    },
+    {
+      "information": "i12",
+      "from": "c13",
+      "to": "c18",
+      "method": "verbal"
+    },
+    {
+      "information": "i13",
+      "from": "c9",
+      "to": "c16",
+      "method": "key"
+    },
+    {
+      "information": "i13",
+      "from": "c16",
+      "to": "c17",
+      "method": "key"
+    },
+    {
+      "information": "i13",
+      "from": "c16",
+      "to": "c13",
+      "method": "verbal"
+    },
+    {
+      "information": "i14",
+      "from": "c9",
+      "to": "c16",
+      "method": "key"
+    },
+    {
+      "information": "i14",
+      "from": "c16",
+      "to": "c18",
+      "method": "verbal"
+    },
+    {
+      "information": "i15",
+      "from": "c18",
+      "to": "c15",
+      "method": "verbal"
+    },
+    {
+      "information": "i15",
+      "from": "c15",
+      "to": "c19",
+      "method": "key"
+    },
+    {
+      "information": "i15",
+      "from": "c18",
+      "to": "c16",
+      "method": "key"
+    },
+    {
+      "information": "i16",
+      "from": "c7",
+      "to": "c19",
+      "method": "key"
+    },
+    {
+      "information": "i16",
+      "from": "c20",
+      "to": "c19",
+      "method": "auto"
+    },
+    {
+      "information": "i16",
+      "from": "c19",
+      "to": "c21",
+      "method": "auto"
+    },
+    {
+      "information": "i16",
+      "from": "c17",
+      "to": "c20",
+      "method": "auto"
+    },
+    {
+      "information": "i17",
+      "from": "c19",
+      "to": "c18",
+      "method": "verbal"
+    },
+    {
+      "information": "i17",
+      "from": "c19",
+      "to": "c5",
+      "method": "key"
+    },
+    {
+      "information": "i17",
+      "from": "c19",
+      "to": "c21",
+      "method": "key"
+    },
+    {
+      "information": "i18",
+      "from": "c13",
+      "to": "c22",
+      "method": "key"
+    },
+    {
+      "information": "i18",
+      "from": "c22",
+      "to": "c24",
+      "method": "auto"
+    },
+    {
+      "information": "i18",
+      "from": "c22",
+      "to": "c23",
+      "method": "auto"
+    },
+    {
+      "information": "i19",
+      "from": "c22",
+      "to": "c24",
+      "method": "key"
+    },
+    {
+      "information": "i19",
+      "from": "c22",
+      "to": "c23",
+      "method": "auto"
+    },
+    {
+      "information": "i20",
+      "from": "c23",
+      "to": "c24",
+      "method": "auto"
+    },
+    {
+      "information": "i20",
+      "from": "c23",
+      "to": "c6",
+      "method": "auto"
+    }
+  ]
+}

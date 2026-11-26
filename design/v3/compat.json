@@ -1,0 +1,50 @@
+{
+  "v": 1,
+  "mode": "omelette",
+  "root": "project/",
+  "title": "Information flow mapping tool",
+  "entry": "Map Intake v3.dc.html",
+  "pages": [
+    {
+      "path": "Map Intake v3.dc.html",
+      "title": "Map Intake v3",
+      "kind": "page"
+    },
+    {
+      "path": "Information Flow Atlas.dc.html",
+      "title": "Information Flow Atlas",
+      "kind": "page"
+    },
+    {
+      "path": "Map Intake v2.dc.html",
+      "title": "Map Intake v2",
+      "kind": "page"
+    },
+    {
+      "path": "Map Intake.dc.html",
+      "title": "Map Intake",
+      "kind": "page"
+    }
+  ],
+  "migratorVersion": "artifact-migrator (claude-design-backend 1a1b12dd776d)",
+  "createdAt": "2026-11-26T16:14:45.320Z",
+  "source": {
+    "v": 1,
+    "app": "claude-design",
+    "url": "https://claude.ai/design/p/3bfbb484-3b10-4c45-91b4-d28e17375dfd",
+    "projectId": "3bfbb484-3b10-4c45-91b4-d28e17375dfd",
+    "exportedAt": "2026-11-26T16:14:45.320Z"
+  },
+  "report": {
+    "itemsVersion": 2,
+    "pages": {
+      "total": 4,
+      "ok": 4,
+      "partial": 0,
+      "notMigrated": 0
+    },
+    "items": [],
+    "truncated": 0,
+    "truncatedLeftOut": 0
+  }
+}

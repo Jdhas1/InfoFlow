@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/industry-b31b4ef3-aa27-43c3-9f91-018ba5772ad7/styles.css">
+<script src="_ds/industry-b31b4ef3-aa27-43c3-9f91-018ba5772ad7/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; background: #f2f2f3; }
+  a { color: #416180; text-decoration: none; }
+  a:hover { color: #2c455d; }
+  input, select, button { font: inherit; }
+  ::selection { background: #d6ebff; }
+</style>
+</helmet>
+<datalist id="dl-info"><sc-for list="{{ infoNames }}" as="n" hint-placeholder-count="0"><option value="{{ n }}"></option></sc-for></datalist>
+<datalist id="dl-cont"><sc-for list="{{ contNames }}" as="n" hint-placeholder-count="0"><option value="{{ n }}"></option></sc-for></datalist>
+<datalist id="dl-steps"><sc-for list="{{ stepNames }}" as="n" hint-placeholder-count="0"><option value="{{ n }}"></option></sc-for></datalist>
+<datalist id="dl-who"><sc-for list="{{ whoNames }}" as="n" hint-placeholder-count="0"><option value="{{ n }}"></option></sc-for></datalist>
+<datalist id="dl-media">
+  <option value="Email"></option><option value="Spreadsheet"></option><option value="Business system record"></option><option value="Shared drive"></option>
+  <option value="Printed paper"></option><option value="Form"></option><option value="Board or display"></option><option value="Someone’s memory"></option><option value="Physical location"></option><option value="Physical part or tag"></option>
+</datalist>
+
+<div style="height: 100vh; display: flex; flex-direction: column; background: #f2f2f3; color: #1d1f20; font-family: Barlow, system-ui, sans-serif; font-size: 15px; overflow: hidden;">
+
+<sc-if value="{{ isStart }}" hint-placeholder-val="{{ true }}">
+  <div style="flex: 1; overflow: auto;">
+    <div style="max-width: 980px; margin: 0 auto; padding: 48px 28px; display: flex; flex-direction: column; gap: 36px;">
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #5d5d60;">Information Flow Mapper</div>
+        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 44px; line-height: 1;">START A MAP</div>
+        <div style="font-size: 16px; color: #424244; max-width: 640px; text-wrap: pretty;">Lay down the process steps, then record what happens at each one: who does what to which information or container. The lists of containers, information and people build themselves as you go.</div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+        <button type="button" onClick="{{ startBlank }}" style="text-align: left; display: flex; flex-direction: column; gap: 10px; padding: 22px; min-height: 200px; border: 1px solid #b9b9bc; background: transparent; cursor: pointer; color: #1d1f20;" style-hover="border-color: #416180; background: #eef6ff">
+          <span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #416180;">01</span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; line-height: 1;">BLANK</span>
+          <span style="font-size: 14px; color: #424244; line-height: 1.45;">Name it, list the steps you already know, and start recording actions.</span>
+        </button>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding: 22px; min-height: 200px; border: 1px solid #b9b9bc;">
+          <span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #416180;">02</span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; line-height: 1;">FROM A TEMPLATE</span>
+          <span style="font-size: 14px; color: #424244; line-height: 1.45;">A starting step list you'll edit next. Steps only, nothing else assumed.</span>
+          <div style="display: flex; flex-direction: column; gap: 6px; margin-top: auto;">
+            <sc-for list="{{ templates }}" as="t" hint-placeholder-count="2">
+              <button type="button" onClick="{{ t.pick }}" style="display: flex; justify-content: space-between; align-items: center; min-height: 44px; padding: 8px 12px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer; color: #1d1f20;" style-hover="border-color: #416180; background: #eef6ff">
+                <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px;">{{ t.name }}</span>
+                <span style="font-size: 12px; color: #5d5d60;">{{ t.count }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 10px; padding: 22px; min-height: 200px; border: 1px solid #b9b9bc; cursor: pointer;" style-hover="border-color: #416180; background: #eef6ff">
+          <span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #416180;">03</span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; line-height: 1;">IMPORT A FILE</span>
+          <span style="font-size: 14px; color: #424244; line-height: 1.45;">Open a map file saved from here and carry on.</span>
+          <span style="margin-top: auto; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; border: 1px solid #416180; color: #2c455d; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px;">Choose a file…</span>
+          <input type="file" accept=".json,application/json" onChange="{{ importFile }}" style="display: none;">
+          <span style="font-size: 13px; color: #8f3f20;">{{ importErr }}</span>
+        </label>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;">
+          <div style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #5d5d60;">Saved on this computer</div>
+          <div style="font-size: 13px; color: #5d5d60;">Maps save here automatically as you work. Use Save to file to keep a copy or move it to another computer.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; border-top: 1px solid #d4d4d7;">
+          <sc-for list="{{ savedList }}" as="sv" hint-placeholder-count="0">
+            <div style="display: flex; align-items: center; gap: 8px; min-height: 56px; border: 1px solid #d4d4d7; border-top: 0; flex-wrap: wrap;">
+              <button type="button" onClick="{{ sv.open }}" style="flex: 1 1 320px; min-width: 0; display: flex; align-items: baseline; gap: 14px; min-height: 54px; padding: 10px 14px; border: 0; background: transparent; cursor: pointer; text-align: left; color: #1d1f20; flex-wrap: wrap;" style-hover="background: #eef6ff">
+                <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 19px;">{{ sv.title }}</span>
+                <span style="font-size: 13px; color: #5d5d60;">{{ sv.meta }}</span>
+                <span style="margin-left: auto; font-size: 13px; color: #5d5d60;">{{ sv.when }}</span>
+              </button>
+              <div style="display: flex; gap: 6px; padding-right: 8px;">
+                <button type="button" onClick="{{ sv.download }}" style="min-height: 40px; padding: 4px 12px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer; font-size: 13px; color: #2c455d;" style-hover="border-color: #416180; background: #eef6ff">Save to file</button>
+                <button type="button" onClick="{{ sv.remove }}" style="min-height: 40px; padding: 4px 12px; border: 1px solid {{ sv.delBorder }}; background: {{ sv.delBg }}; cursor: pointer; font-size: 13px; color: #8f3f20;" style-hover="border-color: #b4552f">{{ sv.delLabel }}</button>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noSaved }}" hint-placeholder-val="{{ true }}">
+            <div style="padding: 14px; border: 1px solid #d4d4d7; border-top: 0; font-size: 14px; color: #5d5d60;">No saved maps yet.</div>
+          </sc-if>
+        </div>
+        <button type="button" onClick="{{ openSample }}" style="display: flex; align-items: baseline; gap: 14px; min-height: 52px; padding: 10px 14px; margin-top: 8px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer; text-align: left; color: #1d1f20;" style-hover="background: #eef6ff">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 19px;">Sample: Dave's shop</span>
+          <span style="font-size: 13px; color: #5d5d60;">Partly captured, with deliberate gaps</span>
+          <span style="margin-left: auto; font-size: 13px; color: #416180;">Open</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
+  <div style="flex: 1; overflow: auto;">
+    <div style="max-width: 720px; margin: 0 auto; padding: 40px 28px 60px; display: flex; flex-direction: column; gap: 26px;">
+      <button type="button" onClick="{{ toStart }}" style="align-self: flex-start; border: 0; background: transparent; padding: 0; cursor: pointer; color: #416180; font-size: 14px;">&larr; All maps</button>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 38px; line-height: 1;">NAME IT, THEN LIST THE STEPS</div>
+        <div style="font-size: 15px; color: #424244;">Rough is fine. You can add, rename and reorder steps any time while capturing.</div>
+      </div>
+      <label style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #5d5d60;">Map name</span>
+        <input type="text" value="{{ mapTitle }}" onChange="{{ setTitle }}" placeholder="e.g. Order intake at Dave's" style="min-height: 48px; padding: 8px 12px; font-size: 18px; background: #e9e9ea; border: 1px solid #d4d4d7; color: #1d1f20;">
+      </label>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #5d5d60;">Steps, in order</span>
+        <div style="display: flex; flex-direction: column; border-top: 1px solid #d4d4d7;">
+          <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; gap: 8px; min-height: 52px; border-bottom: 1px solid #d4d4d7;">
+              <span style="width: 26px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 17px; color: #416180; text-align: right;">{{ s.n }}</span>
+              <input type="text" value="{{ s.name }}" onChange="{{ s.rename }}" style="flex: 1; min-width: 0; min-height: 40px; padding: 4px 8px; font-size: 16px; border: 1px solid transparent; background: transparent; color: #1d1f20;" style-focus="border-color: #5980a6; background: #e9e9ea; outline: none">
+              <button type="button" onClick="{{ s.up }}" style="width: 44px; height: 44px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer;">&uarr;</button>
+              <button type="button" onClick="{{ s.down }}" style="width: 44px; height: 44px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer;">&darr;</button>
+              <button type="button" onClick="{{ s.remove }}" style="width: 44px; height: 44px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer; color: #8f3f20;">&times;</button>
+            </div>
+          </sc-for>
+        </div>
+        <input type="text" onKeyDown="{{ addStepKey }}" placeholder="+ Add a step, press Enter" style="min-height: 48px; padding: 8px 12px; font-size: 16px; background: #e9e9ea; border: 1px dashed #b9b9bc; color: #1d1f20; margin-top: 8px;">
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        <button type="button" onClick="{{ startCapture }}" style="min-height: 52px; padding: 10px 26px; border: 0; background: #416180; color: #f2f2f3; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 19px;" style-hover="background: #2c455d">Start capturing &rarr;</button>
+        <span style="font-size: 13px; color: #8f3f20;">{{ setupError }}</span>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ isWork }}" hint-placeholder-val="{{ false }}">
+  <header style="display: flex; align-items: center; gap: 16px; padding: 10px 18px; border-bottom: 1px solid #d4d4d7; flex-wrap: wrap;">
+    <button type="button" onClick="{{ toStart }}" style="border: 0; background: transparent; padding: 0; cursor: pointer; color: #416180; font-size: 14px;">&larr; Maps</button>
+    <input type="text" value="{{ mapTitle }}" onChange="{{ setTitle }}" placeholder="Untitled map" title="Rename this map" aria-label="Map name" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 21px; line-height: 1; text-transform: uppercase; color: #1d1f20; background: transparent; border: 1px solid transparent; border-bottom: 1px dashed #b9b9bc; padding: 4px 6px; min-width: 120px; width: 280px; max-width: 40vw; outline: none;" style-hover="border-color: #d4d4d7; border-bottom-color: #416180;" style-focus="border-color: #416180; background: #ffffff;">
+    <div style="display: flex; border: 1px solid #416180; margin-right: auto;">
+      <sc-for list="{{ views }}" as="w" hint-placeholder-count="2">
+        <button type="button" onClick="{{ w.pick }}" style="min-height: 36px; padding: 4px 16px; border: 0; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; background: {{ w.bg }}; color: {{ w.fg }}">{{ w.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5d5d60;">Told by</span>
+      <input type="text" list="dl-who" value="{{ sessionWho }}" onChange="{{ setSessionWho }}" placeholder="Who is telling you?" style="width: 190px; min-height: 36px; padding: 4px 10px; background: {{ whoBg }}; border: 1px solid {{ whoBorder }}; color: #1d1f20;">
+      <div style="display: flex; border: 1px solid #d4d4d7;">
+        <sc-for list="{{ channels }}" as="c" hint-placeholder-count="4">
+          <button type="button" onClick="{{ c.pick }}" style="min-height: 36px; padding: 4px 10px; border: 0; border-right: 1px solid #d4d4d7; cursor: pointer; font-size: 13px; background: {{ c.bg }}; color: {{ c.fg }}">{{ c.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <button type="button" onClick="{{ openDrawer }}" style="min-height: 36px; padding: 4px 12px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer; font-size: 13px; color: #1d1f20;" style-hover="border-color: #416180">Edit steps</button>
+    <span style="font-size: 12px; color: {{ saveColor }};">{{ saveStatus }}</span>
+    <button type="button" onClick="{{ exportFile }}" style="min-height: 36px; padding: 4px 12px; border: 1px solid #416180; background: transparent; cursor: pointer; font-size: 13px; color: #2c455d;" style-hover="background: #eef6ff">Save to file</button>
+  </header>
+
+  <sc-if value="{{ drawer }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position: fixed; inset: 0; background: rgba(29,31,32,0.28); z-index: 20;"></div>
+    <div style="position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100vw); z-index: 21; background: #f2f2f3; border-left: 1px solid #b9b9bc; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; padding: 16px 18px; border-bottom: 1px solid #d4d4d7;">
+        <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; margin-right: auto;">EDIT STEPS</span>
+        <button type="button" onClick="{{ closeDrawer }}" style="min-height: 40px; padding: 4px 16px; border: 0; background: #416180; color: #f2f2f3; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px;">Done</button>
+      </div>
+      <div style="padding: 10px 18px 0; font-size: 13px; color: #5d5d60;">Removing a step keeps its actions. They move to "No step".</div>
+      <div style="flex: 1; overflow: auto; padding: 8px 18px 18px; display: flex; flex-direction: column;">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 8px; min-height: 52px; border-bottom: 1px solid #d4d4d7;">
+            <span style="width: 24px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; color: #416180; text-align: right;">{{ s.n }}</span>
+            <input type="text" value="{{ s.name }}" onChange="{{ s.rename }}" style="flex: 1; min-width: 0; min-height: 40px; padding: 4px 8px; border: 1px solid transparent; background: transparent; color: #1d1f20;" style-focus="border-color: #5980a6; background: #e9e9ea; outline: none">
+            <span style="font-size: 12px; color: #5d5d60;">{{ s.count }}</span>
+            <button type="button" onClick="{{ s.up }}" style="width: 40px; height: 40px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer;">&uarr;</button>
+            <button type="button" onClick="{{ s.down }}" style="width: 40px; height: 40px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer;">&darr;</button>
+            <button type="button" onClick="{{ s.remove }}" style="width: 40px; height: 40px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer; color: #8f3f20;">&times;</button>
+          </div>
+        </sc-for>
+        <input type="text" onKeyDown="{{ addStepKey }}" placeholder="+ New step at the end, Enter" style="min-height: 46px; margin-top: 10px; padding: 8px 12px; background: #e9e9ea; border: 1px dashed #b9b9bc; color: #1d1f20;">
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isMap }}" hint-placeholder-val="{{ false }}">
+    <div style="flex: 1; min-height: 0; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 8px 18px; border-bottom: 1px solid #d4d4d7; font-size: 13px; color: #424244; flex-wrap: wrap;">
+        <span style="flex: 1; min-width: 260px;">The Atlas, drawn from the actions recorded so far. Each container sits at the first step that touches it. Read-only actions don't draw a line yet.</span>
+        <button type="button" onClick="{{ openAtlas }}" style="min-height: 34px; padding: 4px 14px; border: 1px solid #416180; background: transparent; cursor: pointer; font-size: 13px; color: #2c455d;">Open in a new tab &#8599;</button>
+      </div>
+      <iframe src="{{ atlasSrc }}" title="Atlas" style="flex: 1; width: 100%; border: 0; background: #f2f2f3;"></iframe>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isCapture }}" hint-placeholder-val="{{ true }}">
+  <div style="flex: 1; min-height: 0; display: flex;">
+    <nav style="flex: 0 0 200px; border-right: 1px solid #d4d4d7; overflow: auto; display: flex; flex-direction: column;">
+      <div style="padding: 14px 14px 6px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #5d5d60;">Steps</div>
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="6">
+        <button type="button" onClick="{{ s.go }}" style="display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 6px 14px; border: 0; border-left: 3px solid {{ s.bar }}; background: {{ s.bg }}; cursor: pointer; text-align: left; color: #1d1f20;" style-hover="background: #eef6ff">
+          <span style="width: 18px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; color: #416180; text-align: right;">{{ s.n }}</span>
+          <span style="flex: 1; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; line-height: 1.1;">{{ s.name }}</span>
+          <sc-if value="{{ s.hasChecks }}" hint-placeholder-val="{{ false }}">
+            <span title="Control points at this step" style="font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 0 5px; border: 1px solid #5980a6; color: #2c455d;">{{ s.checks }}</span>
+          </sc-if>
+          <span style="font-size: 12px; color: #5d5d60;">{{ s.count }}</span>
+        </button>
+      </sc-for>
+      <div style="padding: 8px 10px;">
+        <input type="text" onKeyDown="{{ addStepKey }}" placeholder="+ New step at the end, Enter" style="width: 100%; box-sizing: border-box; min-height: 40px; padding: 6px 10px; font-size: 14px; background: transparent; border: 1px dashed #b9b9bc; color: #1d1f20;" style-focus="border-style: solid; border-color: #5980a6; outline: none">
+      </div>
+      <sc-if value="{{ hasNoStep }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ goNoStep }}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 14px; border: 0; border-top: 1px solid #d4d4d7; background: {{ noStepBg }}; cursor: pointer; text-align: left; color: #8f3f20;">
+          <span style="flex: 1; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px;">Actions with no step</span>
+          <span style="font-size: 12px;">{{ noStepCount }}</span>
+        </button>
+      </sc-if>
+    </nav>
+
+    <main style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column;">
+      <div style="flex: 1; min-height: 0; overflow: auto; padding: 18px 22px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="display: flex; align-items: flex-end; gap: 12px; margin-bottom: 4px;">
+          <div style="display: flex; flex-direction: column; gap: 3px; margin-right: auto;">
+            <span style="font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #5d5d60;">{{ stepKicker }}</span>
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1;">{{ stepTitle }}</span>
+          </div>
+          <button type="button" onClick="{{ prevStep }}" style="width: 44px; height: 44px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer;">&larr;</button>
+          <button type="button" onClick="{{ nextStep }}" style="width: 44px; height: 44px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer;">&rarr;</button>
+        </div>
+        <sc-if value="{{ noActions }}" hint-placeholder-val="{{ false }}">
+          <div style="border: 1px dashed #b9b9bc; padding: 22px; font-size: 14px; color: #424244; line-height: 1.5; max-width: 680px;">
+            Nothing recorded at this step yet. Record what happens here, one action at a time, in the panel below. For example <b>Customer Care Coordinator receives RFQ email from Customer</b>, then list what's on the RFQ, or mark it List later.
+          </div>
+        </sc-if>
+        <sc-for list="{{ actionCards }}" as="a" hint-placeholder-count="3">
+          <div style="display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid {{ a.border }}; border-left: 3px {{ a.edgeStyle }} {{ a.edge }}; background: {{ a.bg }};">
+            <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 14px; color: #416180; padding-top: 3px; min-width: 18px;">{{ a.n }}</span>
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px;">
+              <div style="display: flex; flex-wrap: wrap; gap: 5px; align-items: center; line-height: 1.3;">
+                <sc-for list="{{ a.parts }}" as="p" hint-placeholder-count="5">
+                  <span style="font-size: {{ p.size }}; padding: {{ p.pad }}; border: 1px solid {{ p.border }}; background: {{ p.bg }}; color: {{ p.fg }}; font-weight: {{ p.weight }}; font-family: {{ p.font }}">{{ p.text }}</span>
+                </sc-for>
+              </div>
+              <span style="font-size: 12px; color: {{ a.toldFg }}">{{ a.told }}</span>
+            </div>
+            <div style="display: flex; flex-direction: column; border: 1px solid #d4d4d7;">
+              <button type="button" onClick="{{ a.up }}" disabled="{{ a.isFirst }}" title="Move up" aria-label="Move action up" style="width: 28px; height: 22px; border: 0; border-bottom: 1px solid #d4d4d7; background: transparent; cursor: pointer; color: #416180; font-size: 12px; opacity: {{ a.upOp }};" style-hover="background: #eef6ff">&uarr;</button>
+              <button type="button" onClick="{{ a.down }}" disabled="{{ a.isLast }}" title="Move down" aria-label="Move action down" style="width: 28px; height: 22px; border: 0; background: transparent; cursor: pointer; color: #416180; font-size: 12px; opacity: {{ a.downOp }};" style-hover="background: #eef6ff">&darr;</button>
+            </div>
+            <button type="button" onClick="{{ a.toggle }}" style="min-height: 28px; padding: 2px 8px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; border: 1px solid {{ a.confBorder }}; background: transparent; color: {{ a.confFg }}">{{ a.confLabel }}</button>
+            <button type="button" onClick="{{ a.edit }}" style="min-height: 28px; padding: 2px 10px; font-size: 12px; cursor: pointer; border: 1px solid #d4d4d7; background: transparent; color: #2c455d;">Edit</button>
+            <button type="button" onClick="{{ a.remove }}" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #8f3f20; font-size: 16px;">&times;</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <section style="border-top: 1px solid #b9b9bc; background: #e9e9ea; padding: 12px 22px 14px; display: flex; flex-direction: column; gap: 9px; max-height: 58%; overflow: auto;">
+        <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px;">{{ composerTitle }}</span>
+          <sc-if value="{{ isEditing }}" hint-placeholder-val="{{ false }}">
+            <button type="button" onClick="{{ cancelEdit }}" style="border: 0; background: transparent; padding: 0; cursor: pointer; color: #416180; font-size: 13px;">Cancel edit</button>
+          </sc-if>
+          <button type="button" onClick="{{ clearDraft }}" style="margin-left: auto; border: 0; background: transparent; padding: 0; cursor: pointer; color: #5d5d60; font-size: 13px;">Clear</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 76px 1fr; gap: 8px 10px; align-items: center;">
+          <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5d5d60;">Who</span>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+            <input type="text" list="dl-who" value="{{ dWho }}" onChange="{{ setWho }}" placeholder="Role, outside party or software" style="flex: 1; min-width: 200px; max-width: 320px; min-height: 36px; padding: 4px 10px; border: 1px solid #b9b9bc; background: #f2f2f3; color: #1d1f20;">
+            <button type="button" onClick="{{ editWho }}" title="Rename or retype a role, outside party or software" style="min-height: 36px; padding: 4px 10px; font-size: 12px; cursor: pointer; border: 1px solid #d4d4d7; background: transparent; color: #2c455d;" style-hover="background: #eef6ff">Edit</button>
+            <div style="display: flex; border: 1px solid #d4d4d7;">
+              <sc-for list="{{ whoKinds }}" as="k" hint-placeholder-count="3">
+                <button type="button" onClick="{{ k.pick }}" style="min-height: 36px; padding: 4px 10px; border: 0; border-right: 1px solid #d4d4d7; cursor: pointer; font-size: 13px; background: {{ k.bg }}; color: {{ k.fg }}">{{ k.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5d5d60; align-self: start; padding-top: 8px;">Does</span>
+          <div style="display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; gap: 5px; flex-wrap: wrap; align-items: center;">
+              <span style="font-size: 11px; color: #5d5d60; width: 88px;">To information</span>
+              <sc-for list="{{ infoVerbs }}" as="v" hint-placeholder-count="8">
+                <button type="button" onClick="{{ v.pick }}" title="{{ v.hint }}" style="min-height: 32px; padding: 3px 10px; cursor: pointer; font-size: 13px; border: 1px solid {{ v.border }}; background: {{ v.bg }}; color: {{ v.fg }}">{{ v.label }}</button>
+              </sc-for>
+            </div>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap; align-items: center;">
+              <span style="font-size: 11px; color: #5d5d60; width: 88px;">To a container</span>
+              <sc-for list="{{ contVerbs }}" as="v" hint-placeholder-count="4">
+                <button type="button" onClick="{{ v.pick }}" title="{{ v.hint }}" style="min-height: 32px; padding: 3px 10px; cursor: pointer; font-size: 13px; border: 1px solid {{ v.border }}; background: {{ v.bg }}; color: {{ v.fg }}">{{ v.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <sc-if value="{{ hasMethodRow }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5d5d60;">How</span>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+              <sc-for list="{{ methods }}" as="h" hint-placeholder-count="5">
+                <button type="button" onClick="{{ h.pick }}" style="min-height: 30px; padding: 2px 9px; cursor: pointer; font-size: 12px; border: 1px solid {{ h.border }}; background: {{ h.bg }}; color: {{ h.fg }}">{{ h.label }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-for list="{{ slots }}" as="s" hint-placeholder-count="0">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: {{ s.labelFg }}">{{ s.label }}</span>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap; align-items: center; min-height: 36px; padding: 3px 5px; border: 1px solid {{ s.border }}; background: #f2f2f3;">
+              <sc-for list="{{ s.chips }}" as="c" hint-placeholder-count="0">
+                <span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 8px; border: 1px solid #94bce3; background: #eef6ff; color: #2c455d; font-size: 13px;">
+                  <span>{{ c.text }}</span>
+                  <sc-if value="{{ c.hasMethod }}" hint-placeholder-val="{{ false }}">
+                    <select value="{{ c.method }}" onChange="{{ c.setMethod }}" title="How this one moved, if different" style="font-size: 11px; padding: 0 2px; border: 1px solid #d4d4d7; background: #f2f2f3; color: #424244;">
+                      <sc-for list="{{ c.methodOpts }}" as="o" hint-placeholder-count="0"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+                    </select>
+                  </sc-if>
+                  <button type="button" onClick="{{ c.remove }}" style="width: 22px; height: 22px; border: 0; background: transparent; cursor: pointer; color: #416180;">&times;</button>
+                </span>
+              </sc-for>
+              <sc-for list="{{ s.suggest }}" as="g" hint-placeholder-count="0">
+                <button type="button" onClick="{{ g.pick }}" title="On a container in this action" style="min-height: 26px; padding: 1px 8px; font-size: 12px; cursor: pointer; border: 1px dashed #5980a6; background: transparent; color: #2c455d;" style-hover="background: #eef6ff">{{ g.text }}</button>
+              </sc-for>
+              <input type="text" list="{{ s.listId }}" data-slot="{{ s.key }}" onKeyDown="{{ s.onKey }}" onBlur="{{ s.onBlur }}" placeholder="{{ s.placeholder }}" style="flex: 1; min-width: 160px; min-height: 28px; padding: 2px 6px; border: 0; background: transparent; color: #1d1f20; font-size: 14px;" style-focus="outline: none">
+            </div>
+          </sc-for>
+
+          <sc-if value="{{ hasFromWho }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: {{ fromWhoLabelFg }}">From whom</span>
+            <input type="text" list="dl-who" value="{{ dFromWho }}" onChange="{{ setFromWho }}" placeholder="Who sends it? Customer, supplier, a role" style="max-width: 320px; min-height: 36px; padding: 4px 10px; border: 1px solid #b9b9bc; background: #f2f2f3; color: #1d1f20;">
+          </sc-if>
+          <sc-if value="{{ hasToWho }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: {{ toWhoLabelFg }}">{{ toWhoLabel }}</span>
+            <input type="text" list="dl-who" value="{{ dToWho }}" onChange="{{ setToWho }}" placeholder="{{ toWhoPh }}" style="max-width: 320px; min-height: 36px; padding: 4px 10px; border: 1px solid #b9b9bc; background: #f2f2f3; color: #1d1f20;">
+          </sc-if>
+          <sc-if value="{{ hasOnFail }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5d5d60;">If it fails</span>
+            <input type="text" list="dl-steps" value="{{ dOnFail }}" onChange="{{ setOnFail }}" placeholder="What happens when it doesn't match? A step, or e.g. Recount and tell Purchasing" style="max-width: 520px; min-height: 36px; padding: 4px 10px; border: 1px solid #b9b9bc; background: #f2f2f3; color: #1d1f20;">
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ hasContents }}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-direction: column; border: 1px solid #b9b9bc; background: #f2f2f3;">
+            <div style="display: flex; align-items: baseline; gap: 10px; padding: 7px 10px 5px;">
+              <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5d5d60;">What's on it</span>
+              <span style="font-size: 12px; color: #5d5d60;">Saved to the container itself. Everything listed travels with it when it's received, sent, filed or printed.</span>
+            </div>
+            <sc-for list="{{ contentsCards }}" as="k" hint-placeholder-count="1">
+              <div style="display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border-top: 1px solid #d4d4d7;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px;">{{ k.name }}</span>
+                  <input type="text" list="dl-media" value="{{ k.medium }}" onChange="{{ k.setMedium }}" placeholder="Format: email, paper, spreadsheet…" title="What kind of thing it is" style="width: 220px; min-height: 30px; padding: 3px 8px; font-size: 13px; border: 1px solid {{ k.mediumBorder }}; background: #f2f2f3; color: #1d1f20;">
+                  <span style="font-size: 12px; color: #5d5d60; margin-right: auto;">{{ k.meta }}</span>
+                  <div style="display: flex; border: 1px solid #d4d4d7;">
+                    <sc-for list="{{ k.statuses }}" as="o" hint-placeholder-count="3">
+                      <button type="button" onClick="{{ o.pick }}" style="min-height: 30px; padding: 2px 10px; border: 0; border-right: 1px solid #d4d4d7; cursor: pointer; font-size: 12px; background: {{ o.bg }}; color: {{ o.fg }}">{{ o.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap; align-items: center; min-height: 32px;">
+                  <span style="flex: none; width: 112px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #5d5d60;">Information</span>
+                  <sc-for list="{{ k.fields }}" as="f" hint-placeholder-count="0">
+                    <span style="display: inline-flex; align-items: center; gap: 2px; padding: 1px 2px 1px 8px; font-size: 13px; border: 1px solid #94bce3; background: #eef6ff; color: #2c455d;">{{ f.name }}<button type="button" onClick="{{ f.remove }}" style="width: 22px; height: 22px; border: 0; background: transparent; cursor: pointer; color: #416180;">&times;</button></span>
+                  </sc-for>
+                  <sc-for list="{{ k.suggest }}" as="g" hint-placeholder-count="0">
+                    <button type="button" onClick="{{ g.pick }}" title="Named in What above" style="min-height: 26px; padding: 1px 8px; font-size: 12px; cursor: pointer; border: 1px dashed #5980a6; background: transparent; color: #2c455d;" style-hover="background: #eef6ff">{{ g.text }}</button>
+                  </sc-for>
+                  <input type="text" list="dl-info" onKeyDown="{{ k.addField }}" onBlur="{{ k.blurField }}" placeholder="+ Information, Enter. Paste a comma list to add several" style="flex: 1; min-width: 220px; min-height: 30px; padding: 3px 8px; font-size: 13px; border: 1px dashed #b9b9bc; background: transparent; color: #1d1f20;" style-focus="border-style: solid; border-color: #5980a6; outline: none">
+                </div>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap; align-items: center; min-height: 32px;">
+                  <span style="flex: none; width: 112px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #5d5d60;">Containers inside</span>
+                  <sc-for list="{{ k.subs }}" as="sb" hint-placeholder-count="0">
+                    <span style="display: inline-flex; align-items: center; gap: 2px; padding: 1px 2px 1px 8px; font-size: 13px; border: 1px solid #416180; background: transparent; color: #2c455d; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;">{{ sb.name }}<button type="button" onClick="{{ sb.remove }}" title="Take it out" style="width: 22px; height: 22px; border: 0; background: transparent; cursor: pointer; color: #416180;">&times;</button></span>
+                  </sc-for>
+                  <input type="text" list="dl-cont" onKeyDown="{{ k.addSub }}" onBlur="{{ k.blurSub }}" placeholder="+ Container inside, Enter. e.g. RFQ PDF in an estimate package" style="flex: 1; min-width: 220px; min-height: 30px; padding: 3px 8px; font-size: 13px; border: 1px dashed #b9b9bc; background: transparent; color: #1d1f20;" style-focus="border-style: solid; border-color: #5980a6; outline: none">
+                </div>
+                <sc-if value="{{ k.hasSubErr }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size: 12px; color: #8f3f20;">{{ k.subErr }}</div>
+                </sc-if>
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #1d1f20; cursor: pointer;">
+                  <input type="checkbox" checked="{{ k.pre }}" onChange="{{ k.togglePre }}" style="width: 16px; height: 16px; accent-color: #416180;">
+                  Already exists before this process
+                </label>
+                <sc-if value="{{ k.pre }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <input type="text" list="dl-who" value="{{ k.owner }}" onChange="{{ k.setOwner }}" placeholder="Kept up to date by" style="flex: 1; min-width: 150px; min-height: 30px; font-size: 13px; padding: 3px 8px; border: 1px solid {{ k.ownerBorder }}; background: #f2f2f3;">
+                    <input type="text" value="{{ k.preNote }}" onChange="{{ k.setPreNote }}" placeholder="Where it comes from, e.g. Sales sets prices yearly" style="flex: 2; min-width: 200px; min-height: 30px; font-size: 13px; padding: 3px 8px; border: 1px solid {{ k.preNoteBorder }}; background: #f2f2f3;">
+                  </div>
+                </sc-if>
+                <sc-if value="{{ k.isPending }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8f3f20;">Find out from</span>
+                    <input type="text" value="{{ k.note }}" onChange="{{ k.setNote }}" placeholder="Who or what will tell you what's on it, e.g. blank RFQ form, ask Customer Care" style="flex: 1; min-width: 220px; max-width: 420px; min-height: 30px; padding: 3px 8px; font-size: 13px; border: 1px solid #b4552f; background: #f2f2f3; color: #1d1f20;">
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: {{ dToldLabelFg }}">Source</span>
+          <input type="text" list="dl-who" value="{{ dToldBy }}" onChange="{{ setDToldBy }}" placeholder="{{ dToldPh }}" style="width: 220px; min-height: 36px; padding: 4px 10px; border: 1px solid {{ dToldBorder }}; background: #f2f2f3; color: #1d1f20;">
+          <div style="display: flex; border: 1px solid #d4d4d7;">
+            <sc-for list="{{ dChannels }}" as="c" hint-placeholder-count="4">
+              <button type="button" onClick="{{ c.pick }}" style="min-height: 36px; padding: 4px 10px; border: 0; border-right: 1px solid #d4d4d7; cursor: pointer; font-size: 13px; background: {{ c.bg }}; color: {{ c.fg }}">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <span style="font-size: 12px; color: #5d5d60;">{{ dToldNote }}</span>
+        </div>
+
+        <div style="display: flex; gap: 8px; align-items: stretch;">
+          <input type="text" ref="{{ lineRef }}" value="{{ line }}" onChange="{{ setLine }}" onKeyDown="{{ lineKey }}" placeholder="Or type it: Planner reads Due Date from ERP sales order" autocomplete="off" spellcheck="false" style="flex: 1; min-width: 0; min-height: 44px; padding: 6px 12px; font-size: 16px; background: #f2f2f3; border: 1px solid #416180; color: #1d1f20;" style-focus="outline: 2px solid #94bce3">
+          <button type="button" onClick="{{ toggleUnsure }}" style="min-height: 44px; padding: 3px 12px; cursor: pointer; font-size: 13px; border: 1px solid {{ unsureBorder }}; background: {{ unsureBg }}; color: {{ unsureFg }}">{{ unsureLabel }}</button>
+          <button type="button" onClick="{{ commit }}" style="min-width: 120px; min-height: 44px; border: 0; background: #416180; color: #f2f2f3; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 17px;" style-hover="background: #2c455d">{{ commitLabel }}</button>
+        </div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; min-height: 16px;">
+          <span style="color: #8f3f20;">{{ draftIssue }}</span>
+          <span style="color: #2c455d;">{{ notice }}</span>
+          <span style="color: #5d5d60; margin-left: auto;">Enter adds a chip &middot; Enter on an empty box saves &middot; end the line with ? if unsure &middot; (typed) after an item if it moved differently</span>
+        </div>
+      </section>
+    </main>
+
+    <aside style="flex: 0 1 330px; min-width: 260px; border-left: 1px solid #d4d4d7; display: flex; flex-direction: column; min-height: 0;">
+      <div style="display: flex; border-bottom: 1px solid #d4d4d7;">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button type="button" onClick="{{ t.pick }}" style="flex: 1; min-height: 44px; border: 0; border-bottom: 2px solid {{ t.bar }}; background: transparent; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; color: {{ t.fg }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <div style="flex: 1; min-height: 0; overflow: auto;">
+        <sc-if value="{{ tabGaps }}" hint-placeholder-val="{{ true }}">
+          <sc-for list="{{ gapGroups }}" as="g" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; border-bottom: 1px solid #d4d4d7; padding: 10px 0 8px;">
+              <div style="display: flex; align-items: baseline; gap: 8px; padding: 0 16px;">
+                <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; flex: 1;">{{ g.title }}</span>
+                <span style="font-size: 12px; padding: 1px 7px; border: 1px solid #b4552f; color: #8f3f20;">{{ g.count }}</span>
+              </div>
+              <div style="font-size: 12px; color: #5d5d60; padding: 2px 16px 6px; line-height: 1.4;">{{ g.why }}</div>
+              <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="0">
+                <div style="display: flex; align-items: center; gap: 6px; padding: 0 10px 0 16px;" style-hover="background: #eef6ff">
+                  <button type="button" onClick="{{ i.go }}" style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-height: 40px; padding: 5px 0; border: 0; background: transparent; cursor: pointer; text-align: left; color: #1d1f20;">
+                    <span style="font-size: 14px; font-weight: 500;">{{ i.label }}</span>
+                    <span style="font-size: 12px; color: #5d5d60;">{{ i.where }}</span>
+                  </button>
+                  <sc-if value="{{ i.canFix }}" hint-placeholder-val="{{ false }}">
+                    <button type="button" onClick="{{ i.fix }}" style="min-height: 30px; padding: 2px 9px; border: 1px solid #416180; background: transparent; cursor: pointer; font-size: 12px; color: #2c455d;">{{ i.fixLabel }}</button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noGaps }}" hint-placeholder-val="{{ false }}">
+            <div style="padding: 16px; font-size: 14px; color: #424244;">Nothing flagged.</div>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{ tabContainers }}" hint-placeholder-val="{{ false }}">
+          <div style="padding: 10px 16px; font-size: 12px; color: #5d5d60;">Containers belong to no step. They show up at a step when an action touches them there. Holds lists the information and the other containers it's meant to carry. <b>Not asked yet</b> means nobody has said what's on it; <b>List later</b> means you know where to get the list.</div>
+          <sc-for list="{{ libContainers }}" as="c" hint-placeholder-count="4">
+            <div style="border-top: 1px solid #d4d4d7; padding: 10px 16px; display: flex; flex-direction: column; gap: 6px; background: {{ c.bg }};">
+              <input type="text" value="{{ c.name }}" onChange="{{ c.rename }}" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; padding: 2px 4px; border: 1px solid transparent; background: transparent; color: #1d1f20;" style-focus="border-color: #5980a6; background: #e9e9ea; outline: none">
+              <div style="display: flex; gap: 6px;">
+                <input type="text" list="dl-media" value="{{ c.medium }}" onChange="{{ c.setMedium }}" placeholder="Format (email, paper…)" title="Format" style="flex: 1; min-width: 0; font-size: 13px; padding: 4px 6px; border: 1px solid #d4d4d7; background: #f2f2f3;">
+                <input type="text" list="dl-who" value="{{ c.owner }}" onChange="{{ c.setOwner }}" placeholder="Owner" style="flex: 1; min-width: 0; font-size: 13px; padding: 4px 6px; border: 1px solid #d4d4d7; background: #f2f2f3;">
+              </div>
+              <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #1d1f20; cursor: pointer;">
+                  <input type="checkbox" checked="{{ c.pre }}" onChange="{{ c.togglePre }}" style="width: 16px; height: 16px; accent-color: #416180;">
+                  Already exists before this process
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #424244;">
+                  <span style="flex: none; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #5d5d60;">Lives inside</span>
+                  <input type="text" list="dl-cont" value="{{ c.parent }}" onChange="{{ c.setParent }}" placeholder="e.g. Jobs SharePoint site, Job folder (optional)" style="flex: 1; min-width: 0; font-size: 13px; padding: 4px 6px; border: 1px solid #d4d4d7; background: #f2f2f3;">
+                </label>
+                                <sc-if value="{{ c.pre }}" hint-placeholder-val="{{ false }}">
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <input type="text" list="dl-who" value="{{ c.owner }}" onChange="{{ c.setOwner }}" placeholder="Kept up to date by" style="flex: 1; min-width: 150px; min-height: 30px; font-size: 13px; padding: 3px 8px; border: 1px solid {{ c.ownerBorder }}; background: #f2f2f3;">
+                    <input type="text" value="{{ c.preNote }}" onChange="{{ c.setPreNote }}" placeholder="Where it comes from, e.g. Sales sets prices yearly" style="flex: 2; min-width: 200px; min-height: 30px; font-size: 13px; padding: 3px 8px; border: 1px solid {{ c.preNoteBorder }}; background: #f2f2f3;">
+                  </div>
+                </sc-if>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #5d5d60; margin-right: auto;">Holds</span>
+                <select value="{{ c.status }}" onChange="{{ c.setStatus }}" style="font-size: 12px; padding: 3px 4px; border: 1px solid {{ c.statusBorder }}; background: #f2f2f3; color: #1d1f20;">
+                  <option value="listed">Listed</option><option value="pending">List later</option><option value="unknown">Not asked yet</option>
+                </select>
+              </div>
+              <sc-if value="{{ c.isPending }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 3px;">
+                  <span style="font-size: 12px; color: #8f3f20;">Marked List later. Who or what will tell you what's on it?</span>
+                  <input type="text" value="{{ c.note }}" onChange="{{ c.setNote }}" placeholder="e.g. Ask Production Manager, blank form, walk the shelf" style="font-size: 12px; padding: 4px 6px; border: 1px solid #b4552f; background: #f2f2f3;">
+                </div>
+              </sc-if>
+              <div style="display: flex; gap: 4px; flex-wrap: wrap; align-items: center;">
+                <sc-for list="{{ c.fields }}" as="f" hint-placeholder-count="0">
+                  <span style="display: inline-flex; align-items: center; gap: 2px; padding: 1px 2px 1px 7px; font-size: 12px; border: 1px {{ f.style }} {{ f.border }}; color: {{ f.fg }}; background: {{ f.bg }}">{{ f.name }}<button type="button" onClick="{{ f.remove }}" style="width: 20px; height: 20px; border: 0; background: transparent; cursor: pointer; color: #416180;">&times;</button></span>
+                </sc-for>
+                <input type="text" list="dl-info" onKeyDown="{{ c.addField }}" placeholder="+ information, Enter" style="width: 140px; font-size: 12px; padding: 3px 6px; border: 1px dashed #b9b9bc; background: transparent;">
+              </div>
+              <div style="display: flex; gap: 4px; flex-wrap: wrap; align-items: center;">
+                <sc-for list="{{ c.subs }}" as="sb" hint-placeholder-count="0">
+                    <span style="display: inline-flex; align-items: center; gap: 2px; padding: 1px 2px 1px 8px; font-size: 13px; border: 1px solid #416180; background: transparent; color: #2c455d; font-family: 'Barlow Condensed', sans-serif; font-weight: 600;">{{ sb.name }}<button type="button" onClick="{{ sb.remove }}" title="Take it out" style="width: 22px; height: 22px; border: 0; background: transparent; cursor: pointer; color: #416180;">&times;</button></span>
+                  </sc-for>
+                <input type="text" list="dl-cont" onKeyDown="{{ c.addSub }}" placeholder="+ container inside, Enter" style="width: 160px; font-size: 12px; padding: 3px 6px; border: 1px dashed #b9b9bc; background: transparent;">
+              </div>
+              <sc-if value="{{ c.hasSubErr }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size: 12px; color: #8f3f20;">{{ c.subErr }}</div>
+              </sc-if>
+              <sc-if value="{{ c.hasExtra }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size: 12px; color: #8f3f20;">Also written here, not defined: {{ c.extra }}</div>
+              </sc-if>
+              <div style="font-size: 12px; color: #5d5d60;">{{ c.touched }}</div>
+            </div>
+          </sc-for>
+        </sc-if>
+
+        <sc-if value="{{ tabInfo }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ libInfo }}" as="i" hint-placeholder-count="6">
+            <div style="border-bottom: 1px solid #d4d4d7; padding: 8px 16px; display: flex; flex-direction: column; gap: 2px;">
+              <input type="text" value="{{ i.name }}" onChange="{{ i.rename }}" style="font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; padding: 2px 4px; border: 1px solid transparent; background: transparent; color: #1d1f20;" style-focus="border-color: #5980a6; background: #e9e9ea; outline: none">
+              <span style="font-size: 12px; color: #5d5d60; padding-left: 4px;">{{ i.meta }}</span>
+            </div>
+          </sc-for>
+        </sc-if>
+
+        <sc-if value="{{ tabWho }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ libWho }}" as="w" hint-placeholder-count="5">
+            <div style="border-bottom: 1px solid #d4d4d7; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
+              <input type="text" value="{{ w.name }}" onChange="{{ w.rename }}" style="flex: 1; min-width: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; padding: 2px 4px; border: 1px solid transparent; background: transparent; color: #1d1f20;" style-focus="border-color: #5980a6; background: #e9e9ea; outline: none">
+              <select value="{{ w.kind }}" onChange="{{ w.setKind }}" style="font-size: 12px; padding: 3px 4px; border: 1px solid #d4d4d7; background: #f2f2f3;">
+                <option value="role">Role</option><option value="external">Outside party</option><option value="software">Software</option>
+              </select>
+              <span style="font-size: 12px; color: #5d5d60; min-width: 54px; text-align: right;">{{ w.count }}</span>
+              <button type="button" onClick="{{ w.remove }}" title="Delete" aria-label="Delete" style="width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: #8f3f20; font-size: 16px;">&times;</button>
+            </div>
+            <sc-if value="{{ w.confirming }}" hint-placeholder-val="{{ false }}">
+              <div style="border-bottom: 1px solid #d4d4d7; padding: 8px 16px 10px; display: flex; flex-direction: column; gap: 6px; background: #fbeee8;">
+                <span style="font-size: 12px; color: #8f3f20;">{{ w.warn }}</span>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
+                  <select onChange="{{ w.mergeInto }}" style="flex: 1; min-width: 140px; font-size: 12px; padding: 3px 4px; border: 1px solid #416180; background: #f2f2f3; color: #1d1f20;">
+                    <option value="">Move its actions to…</option>
+                    <sc-for list="{{ w.others }}" as="o" hint-placeholder-count="0">
+                      <option value="{{ o.id }}">{{ o.name }}</option>
+                    </sc-for>
+                  </select>
+                  <button type="button" onClick="{{ w.clearDelete }}" style="min-height: 28px; padding: 2px 9px; border: 1px solid #b4552f; background: transparent; cursor: pointer; font-size: 12px; color: #8f3f20;">Delete anyway</button>
+                  <button type="button" onClick="{{ w.cancel }}" style="min-height: 28px; padding: 2px 9px; border: 1px solid #d4d4d7; background: transparent; cursor: pointer; font-size: 12px; color: #424244;">Cancel</button>
+                </div>
+              </div>
+            </sc-if>
+          </sc-for>
+        </sc-if>
+      </div>
+    </aside>
+  </div>
+  </sc-if>
+</sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const VERBS = [
+  { k: "create", label: "Create", word: "creates", group: "info", from: "none", to: "req", hint: "Brings a value into being: assigns a number, raises an order" },
+  { k: "copy", label: "Type / copy into", word: "copies", group: "info", from: "req", to: "req", method: true, hint: "Moves values from one container into another" },
+  { k: "read", label: "Read / use", word: "reads", group: "info", from: "req", to: "none", hint: "Looks at a value to do the work. Nothing is written" },
+  { k: "check", label: "Check / verify", word: "checks", group: "info", from: "opt", fromLabel: "Looked at", to: "opt", toLabel: "Result into", toWho: "Result told to", toWhoOpt: true, onFail: true, hint: "Looks to confirm a value: what's on hand, whether it's right. Add a second place if they compare. A control point" },
+  { k: "tell", label: "Tell verbally", word: "tells", group: "info", from: "opt", to: "none", toWho: "Told to", hint: "Says it to someone. No record" },
+  { k: "decide", label: "Decide", word: "decides", group: "info", from: "opt", to: "opt", hint: "Makes the call, maybe from inputs, maybe writes it down" },
+  { k: "measure", label: "Measure", word: "measures", group: "info", from: "opt", to: "req", hint: "Reads it off the work or an instrument" },
+  { k: "calculate", label: "Calculate", word: "calculates", group: "info", from: "req", to: "req", hint: "Works it out from other values" },
+  { k: "update", label: "Update / change", word: "updates", group: "info", from: "opt", to: "req", hint: "Changes a value already there" },
+  { k: "setup", label: "Set up / create", word: "sets up", group: "container", to: "opt", toLabel: "Inside", hint: "Makes a new container: a SharePoint folder, a spreadsheet, a binder, a job traveler. Add where it lives if it sits inside something" },
+  { k: "file", label: "File / move", word: "files", group: "container", to: "req", toLabel: "Into", hint: "Puts a container somewhere: a folder, a rack, a drive" },
+  { k: "print", label: "Print / copy", word: "prints", group: "container", to: "req", toLabel: "As", hint: "Makes a copy that can drift from the original" },
+  { k: "receive", label: "Receive", word: "receives", group: "container", to: "none", fromWho: "From whom", hint: "Gets it from someone: a customer, a supplier, another role" },
+  { k: "send", label: "Send", word: "sends", group: "container", to: "none", toWho: "Sent to", hint: "Hands it to someone else" },
+  { k: "archive", label: "Archive / discard", word: "archives", group: "container", to: "none", hint: "Takes it out of circulation" }
+];
+const VB = {};
+VERBS.forEach(function (v) { VB[v.k] = v; });
+const METHODS = [
+  { k: "typed", label: "Typed by hand", word: "types" },
+  { k: "paste", label: "Copy & paste", word: "pastes" },
+  { k: "auto", label: "Automatically", word: "posts" },
+  { k: "scan", label: "Scanned / imported", word: "scans" },
+  { k: "written", label: "Hand-written", word: "writes" }
+];
+const MB = {};
+METHODS.forEach(function (m) { MB[m.k] = m; });
+const VERB_WORDS = [
+  ["types", "copy", "typed"], ["keys", "copy", "typed"], ["enters", "copy", "typed"], ["rekeys", "copy", "typed"],
+  ["pastes", "copy", "paste"], ["posts", "copy", "auto"], ["syncs", "copy", "auto"], ["transfers", "copy", "auto"],
+  ["scans", "copy", "scan"], ["imports", "copy", "scan"], ["writes", "copy", "written"], ["copies", "copy", null],
+  ["sets up", "setup"], ["opens", "setup"], ["starts", "setup"], ["creates", "create"], ["generates", "create"], ["assigns", "create"], ["raises", "create"],
+  ["reads", "read"], ["uses", "read"], ["references", "read"],
+  ["checks", "check"], ["verifies", "check"], ["confirms", "check"], ["compares", "check"], ["reconciles", "check"],
+  ["tells", "tell"], ["says", "tell"], ["calls", "tell"],
+  ["decides", "decide"], ["chooses", "decide"],
+  ["measures", "measure"], ["inspects", "measure"], ["counts", "measure"], ["weighs", "measure"],
+  ["calculates", "calculate"], ["computes", "calculate"],
+  ["updates", "update"], ["changes", "update"], ["corrects", "update"], ["edits", "update"],
+  ["files", "file"], ["moves", "file"], ["puts", "file"], ["stores", "file"],
+  ["prints", "print"], ["photocopies", "print"],
+  ["receives", "receive"], ["gets", "receive"], ["sends", "send"], ["emails", "send"], ["mails", "send"], ["hands", "send"], ["ships", "send"],
+  ["archives", "archive"], ["discards", "archive"], ["shreds", "archive"]
+];
+const METHOD_ALIAS = { typed: "typed", "by hand": "typed", keyed: "typed", paste: "paste", pasted: "paste", auto: "auto", automatic: "auto", automatically: "auto", scan: "scan", scanned: "scan", written: "written", "hand-written": "written" };
+const KINDS = [["role", "Role"], ["external", "Outside party"], ["software", "Software"]];
+const CHANNELS = ["Interview", "Floor walk", "Document", "Workshop"];
+const TEMPLATES = [
+  { name: "Job shop: quote to cash", steps: ["Quote", "Receive PO", "Open job", "Engineering release", "Purchasing", "Schedule", "Production", "Inspection", "Ship & invoice"] },
+  { name: "Office: order to invoice", steps: ["Inquiry", "Quote", "Order entry", "Credit check", "Fulfilment", "Invoice", "Collect"] }
+];
+const STORE = "ifm-intake-v3";
+const LIB = "ifm-library-v3";
+const readLib = function () { try { return JSON.parse(localStorage.getItem(LIB) || "{}") || {}; } catch (e) { return {}; } };
+const fmtWhen = function (t) { const d = new Date(t), now = new Date(); const time = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); return d.toDateString() === now.toDateString() ? "Today " + time : d.toLocaleDateString([], { month: "short", day: "numeric", year: d.getFullYear() === now.getFullYear() ? undefined : "numeric" }) + " " + time; };
+const downloadMap = function (m) {
+  const slug = String(m.title || "map").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "map";
+  const url = URL.createObjectURL(new Blob([JSON.stringify(m, null, 2)], { type: "application/json" }));
+  const a = document.createElement("a"); a.href = url; a.download = slug + ".ifm.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+};
+const STATUSES = [["listed", "Listed"], ["pending", "List later"], ["unknown", "Not asked yet"]];
+const cStatus = function (c) { return c.contents || (c.fields.length ? "listed" : "unknown"); };
+const NOSTEP = "__none";
+const WRITES = { create: 1, copy: 1, decide: 1, measure: 1, calculate: 1, update: 1 };
+
+let seq = 0;
+const uid = function (p) { seq++; return p + "_" + Date.now().toString(36) + seq.toString(36); };
+const clean = function (s) { return String(s == null ? "" : s).trim().replace(/\s+/g, " "); };
+const ci = function (s) { return clean(s).toLowerCase(); };
+const norm = function (s) {
+  return String(s || "").toLowerCase().replace(/#/g, " number ").replace(/\bno\.?(?=\s|$)/g, " number ")
+    .replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim().replace(/s\b/g, "");
+};
+const lev = function (a, b) {
+  const d = [];
+  for (let i = 0; i <= a.length; i++) d[i] = [i];
+  for (let j = 0; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+};
+const similar = function (a, b) {
+  const x = norm(a), y = norm(b);
+  if (!x || !y || ci(a) === ci(b)) return false;
+  return x === y || (Math.min(x.length, y.length) >= 5 && lev(x, y) <= 1);
+};
+const emptyDraft = function (who, kind) {
+  return { who: who || "", whoKind: kind || "role", verb: null, method: null, items: [], objects: [], from: [], to: [], toWho: "", fromWho: "", onFail: "", unsure: false, toldBy: null, channel: null };
+};
+
+function emptyMap(title) {
+  const ts = new Date().toISOString();
+  return { schemaVersion: "4.0.0-draft", mapId: uid("map"), title: title || "", createdAt: ts, modifiedAt: ts,
+    steps: [], performers: [], containers: [], information: [], actions: [] };
+}
+
+function sampleMap() {
+  const m = emptyMap("Dave's shop: order to floor");
+  const S = ["Receive PO", "Open job", "Engineering release", "Schedule", "Production", "Inspection", "Ship & invoice"]
+    .map(function (n, i) { m.steps.push({ id: "s" + i, name: n, order: i }); return "s" + i; });
+  const P = {};
+  [["Customer", "external"], ["Customer Care Coordinator", "role"], ["ERP", "software"], ["Engineering Lead", "role"], ["Planner", "role"], ["Machinist", "role"]]
+    .forEach(function (x, i) { P[x[0]] = "w" + i; m.performers.push({ id: "w" + i, name: x[0], kind: x[1] }); });
+  const I = {};
+  const info = function (n) { if (!I[n]) { I[n] = "i" + m.information.length; m.information.push({ id: I[n], name: n }); } return I[n]; };
+  const C = {};
+  const cnt = function (name, medium, owner, fields) {
+    C[name] = "c" + m.containers.length;
+    m.containers.push({ id: C[name], name: name, medium: medium, ownerId: P[owner] || null, fields: fields.map(info) });
+  };
+  cnt("Customer PO email", "Email", "Customer Care Coordinator", ["PO Number", "Customer", "Part Number", "Quantity", "Due Date"]);
+  cnt("Job Log row", "Spreadsheet", "Customer Care Coordinator", ["Job Number", "PO Number", "Customer", "Part Number", "Due Date"]);
+  cnt("ERP sales order", "Business system record", "ERP", ["Job Number", "Customer", "Quantity", "Due Date"]);
+  cnt("Job folder", "Printed paper", "Customer Care Coordinator", []);
+  m.containers[m.containers.length - 1].contents = "pending";
+  m.containers[m.containers.length - 1].contentsNote = "Photo of a filled folder from Customer Care";
+  cnt("Drawing package", "Shared drive", "Engineering Lead", ["Part Number", "Revision", "Material Spec"]);
+  cnt("Router sheet", "Printed paper", "Engineering Lead", ["Job Number", "Part Number", "Revision", "Material Spec", "Operations"]);
+  cnt("Schedule whiteboard", "Board or display", "Planner", ["Job Number", "Due Date", "Work Center"]);
+  cnt("Traveler", "Printed paper", "Planner", ["Job Number", "Part Number", "Quantity"]);
+  const act = function (step, who, verb, o) {
+    m.actions.push(Object.assign({ id: "a" + m.actions.length, stepId: S[step], who: P[who] || null, verb: verb, method: null,
+      items: [], objects: [], from: [], to: [], toWho: null, fromWho: null, confirmed: true, toldBy: "Customer Care Coordinator", channel: "Interview", at: m.createdAt }, o));
+  };
+  const it = function (list) { return list.map(function (n) { return { info: info(n), method: null }; }); };
+  act(0, "Customer Care Coordinator", "receive", { objects: [C["Customer PO email"]], fromWho: P["Customer"] });
+  act(1, "Customer Care Coordinator", "copy", { method: "typed", items: it(["PO #", "Customer", "Part Number", "Due Date"]), from: [C["Customer PO email"]], to: [C["Job Log row"]] });
+  act(1, "Customer Care Coordinator", "create", { items: it(["Job No."]), to: [C["Job Log row"]] });
+  act(1, "Customer Care Coordinator", "copy", { method: "typed", items: it(["Job Number", "Due Date"]), from: [C["Job Log row"]], to: [C["ERP sales order"]] });
+  act(1, "ERP", "copy", { method: "auto", items: it(["Customer"]), from: [C["Job Log row"]], to: [C["ERP sales order"]] });
+  act(1, "Customer Care Coordinator", "copy", { method: null, items: it(["Quantity"]), from: [C["Customer PO email"]], to: [C["ERP sales order"]] });
+  act(1, "Customer Care Coordinator", "file", { objects: [C["Customer PO email"]], to: [C["Job folder"]] });
+  act(2, "Engineering Lead", "copy", { method: "typed", items: it(["Job Number", "Part Number", "Revision", "Material Spec"]), from: [C["ERP sales order"], C["Drawing package"]], to: [C["Router sheet"]], toldBy: "Engineering Lead", confirmed: false });
+  act(3, "Planner", "copy", { method: "written", items: it(["Job Number", "Due Date"]), from: [C["ERP sales order"]], to: [C["Schedule whiteboard"]], toldBy: "Planner" });
+  act(3, "Planner", "decide", { items: it(["Work Center"]), from: [C["Router sheet"]], to: [C["Schedule whiteboard"]], toldBy: "Planner" });
+  act(3, "ERP", "copy", { method: "auto", items: it(["Job Number", "Part Number", "Quantity"]), from: [C["ERP sales order"]], to: [C["Traveler"]], toldBy: null });
+  act(4, "Planner", "tell", { items: it(["Run order"]), from: [C["Schedule whiteboard"]], toWho: P["Machinist"], confirmed: false, toldBy: "Machinist" });
+  act(4, "Machinist", "read", { items: it(["Revision", "Material Spec"]), from: [C["Router sheet"]], toldBy: "Machinist" });
+  act(4, "Machinist", "read", { items: it(["Revision"]), from: [C["Traveler"]], toldBy: "Machinist" });
+  return m;
+}
+
+class Component extends DCLogic {
+  state = { screen: "start", map: null, session: { who: "", channel: "Interview" }, activeStep: null, draft: emptyDraft(), line: "",
+    editingId: null, flash: null, notice: "", tab: "gaps", view: "capture", mapV: 0, drawer: false, importErr: "", setupError: "", lib: {}, savedAt: null, saveErr: "", pendingDel: null };
+
+  componentDidMount() {
+    try {
+      const lib = readLib();
+      const d = JSON.parse(localStorage.getItem(STORE) || localStorage.getItem("ifm-intake-v2") || "null");
+      if (d && d.map) {
+        if (!d.map.mapId) d.map.mapId = uid("map");
+        if (!lib[d.map.mapId]) { lib[d.map.mapId] = { map: d.map, session: d.session, savedAt: Date.parse(d.map.modifiedAt) || Date.now() }; localStorage.setItem(LIB, JSON.stringify(lib)); }
+        this.setState({ session: d.session || this.state.session });
+      }
+      this.setState({ lib: lib });
+    } catch (e) {}
+  }
+  componentDidUpdate() {
+    const m = this.state.map;
+    if (m && (m !== this._savedMap || this.state.session !== this._savedSession) && m.modifiedAt !== m.createdAt) {
+      this._savedMap = m; this._savedSession = this.state.session;
+      if (!m.mapId) m.mapId = uid("map");
+      const now = Date.now(), lib = readLib();
+      lib[m.mapId] = { map: m, session: this.state.session, savedAt: now };
+      try {
+        localStorage.setItem(LIB, JSON.stringify(lib));
+        localStorage.setItem(STORE, JSON.stringify({ map: m, session: this.state.session }));
+        this.setState({ lib: lib, savedAt: now, saveErr: "" });
+      } catch (e) { this.setState({ saveErr: "Couldn't save on this computer. Use Save to file." }); }
+    }
+  }
+
+  /* ---------- model helpers ---------- */
+  mut(fn) { const m = this.state.map; fn(m); m.modifiedAt = new Date().toISOString(); this.setState({ map: Object.assign({}, m) }); }
+  ordered(m) { return m.steps.slice().sort(function (a, b) { return a.order - b.order; }); }
+  renumber(m) { this.ordered(m).forEach(function (s, i) { s.order = i; }); }
+  byId(list, id) { return list.find(function (x) { return x.id === id; }) || null; }
+  byName(list, n) { return list.find(function (x) { return ci(x.name) === ci(n); }) || null; }
+  ensure(m, listKey, name, extra) {
+    const n = clean(name);
+    if (!n) return null;
+    let x = this.byName(m[listKey], n);
+    if (!x) { x = Object.assign({ id: uid(listKey.slice(0, 3)), name: n }, extra || {}); m[listKey].push(x); }
+    return x;
+  }
+  stepName(m, id) { const s = id && id !== NOSTEP ? this.byId(m.steps, id) : null; return s ? s.name : "No step"; }
+  stepIdx(m, id) { return this.ordered(m).findIndex(function (s) { return s.id === id; }); }
+
+  /* ---------- the typed line ---------- */
+  parseLine(text) {
+    let t = clean(text);
+    const d = emptyDraft("", this.state.draft.whoKind);
+    if (!t) return d;
+    if (/\?\s*$/.test(t)) { d.unsure = true; t = t.replace(/\?\s*$/, "").trim(); }
+    const low = t.toLowerCase();
+    let hit = null;
+    VERB_WORDS.forEach(function (w) {
+      const re = new RegExp("(^|\\s)" + w[0] + "(\\s|$)");
+      const mm = re.exec(low);
+      if (mm && (!hit || mm.index < hit.index)) hit = { index: mm.index + mm[1].length, len: w[0].length, w: w };
+    });
+    if (!hit) { d.who = t; return d; }
+    d.who = clean(t.slice(0, hit.index));
+    d.verb = hit.w[1];
+    d.method = hit.w[2] || null;
+    let rest = t.slice(hit.index + hit.len);
+    const bm = rest.match(/\s+by\s+(.+)$/i);
+    if (bm && METHOD_ALIAS[ci(bm[1])]) { d.method = METHOD_ALIAS[ci(bm[1])]; rest = rest.slice(0, bm.index); }
+    const parts = { what: "", from: "", into: "", to: "" };
+    let cur = "what";
+    rest.split(/(\bfrom\b|\bagainst\b|\binto\b|\bonto\b|\bto\b|\bas\b)/i).forEach(function (seg) {
+      const k = seg.toLowerCase();
+      if (k === "from" || k === "against") cur = "from"; else if (k === "into" || k === "onto" || k === "as") cur = "into"; else if (k === "to") cur = "to";
+      else parts[cur] += seg;
+    });
+    const list = function (s) { return s.split(/,|\band\b/i).map(clean).filter(Boolean); };
+    const v = VB[d.verb];
+    const whatList = list(parts.what);
+    if (v.group === "container") d.objects = whatList;
+    else d.items = whatList.map(function (n) {
+      const mm = n.match(/^(.*?)\s*\(([^)]+)\)$/);
+      return mm ? { name: clean(mm[1]), method: METHOD_ALIAS[ci(mm[2])] || null } : { name: n, method: null };
+    });
+    d.from = list(parts.from);
+    d.to = list(parts.into);
+    if (parts.to) { if (v.toWho) d.toWho = clean(parts.to); else d.to = d.to.concat(list(parts.to)); }
+    if (v.fromWho) { d.fromWho = clean(parts.from); d.from = []; }
+    const ex = this.byName(this.state.map.performers, d.who);
+    if (ex) d.whoKind = ex.kind;
+    return d;
+  }
+  lineOf(d) {
+    if (!d.verb) return d.who;
+    const v = VB[d.verb];
+    const word = v.k === "copy" && d.method ? MB[d.method].word : v.word;
+    const what = v.group === "container" ? d.objects.join(", ")
+      : d.items.map(function (i) { return i.name + (i.method && i.method !== d.method ? " (" + MB[i.method].label.toLowerCase() + ")" : ""); }).join(", ");
+    let s = clean(d.who + " " + word + " " + what);
+    if (d.from.length) s += (d.verb === "check" ? " against " : " from ") + d.from.join(", ");
+    if (d.fromWho) s += " from " + d.fromWho;
+    if (d.to.length) s += (d.verb === "print" ? " as " : d.verb === "setup" ? " inside " : " into ") + d.to.join(", ");
+    if (d.toWho) s += " to " + d.toWho;
+    if (d.unsure) s += " ?";
+    return s;
+  }
+  subsOf(m, c) {
+    const self = this;
+    return m.containers.filter(function (x) { return x.parentId === c.id; }).map(function (x) {
+      return { name: x.name, remove: function () { self.mut(function (mm) { self.nest(mm, self.byId(mm.containers, x.id), null); }); } };
+    });
+  }
+  addSub(el, parentName) {
+    const self = this, names = String(el.value).split(/[,;\n]/).map(clean).filter(Boolean);
+    if (!names.length) return;
+    let err = "";
+    this.mut(function (mm) {
+      const p = self.ensure(mm, "containers", parentName, { medium: null, ownerId: null, fields: [] });
+      names.forEach(function (n) {
+        if (ci(n) === ci(p.name)) { err = "A container can't hold itself."; return; }
+        const k = self.ensure(mm, "containers", n, { medium: null, ownerId: null, fields: [] });
+        if (self.nest(mm, k, p.id) === false) err = k.name + " already holds " + p.name + ", so it can't also sit inside it.";
+      });
+    });
+    el.value = "";
+    this.setState({ subErr: err ? { at: parentName, msg: err } : null });
+  }
+  nest(m, c, pid) {
+    if (!c) return false;
+    if (!pid) { c.parentId = null; return true; }
+    let p = this.byId(m.containers, pid), guard = 0;
+    while (p && guard++ < 100) { if (p.id === c.id) return false; p = this.byId(m.containers, p.parentId); }
+    c.parentId = pid; return true;
+  }
+  setDraft(patch) {
+    const d = Object.assign({}, this.state.draft, patch);
+    this.setState({ draft: d, line: this.lineOf(d) });
+  }
+
+  draftIssues(d) {
+    if (!d.verb) return d.who ? "Pick what they do." : "";
+    const v = VB[d.verb], out = [];
+    if (!clean(d.who)) out.push("who?");
+    if (v.group === "container" ? !d.objects.length : !d.items.length) out.push(v.group === "container" ? "which container?" : "what information?");
+    if (v.from === "req" && !d.from.length) out.push("from where?");
+    if (v.to === "req" && !d.to.length) out.push(v.toLabel ? v.toLabel.toLowerCase() + " what?" : "into where?");
+    if (v.toWho && !v.toWhoOpt && !clean(d.toWho)) out.push(v.toWho.toLowerCase() + "?");
+    if (v.fromWho && !clean(d.fromWho)) out.push("from whom?");
+    if (v.method && !d.method) out.push("how?");
+    return out.length ? "Missing: " + out.join(", ") + ". You can still save, and it'll show as a gap." : "";
+  }
+
+  pullPending() {
+    const d = Object.assign({}, this.state.draft, { items: this.state.draft.items.slice(), objects: this.state.draft.objects.slice(), from: this.state.draft.from.slice(), to: this.state.draft.to.slice() });
+    const v = d.verb ? VB[d.verb] : null;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-slot]"), function (el) {
+      const val = clean(el.value);
+      if (!val) return;
+      const k = el.getAttribute("data-slot");
+      if (k === "items") d.items.push({ name: val, method: null });
+      else d[k].push(val);
+      el.value = "";
+    });
+    return d;
+  }
+
+  commit() {
+    const st = this.state, d = this.pullPending();
+    if (!d.verb) { this.setState({ notice: "", draft: d }); return; }
+    const v = VB[d.verb];
+    if (v.group === "container" ? !d.objects.length : !d.items.length) { this.setState({ draft: d, line: this.lineOf(d) }); return; }
+    const sess = st.session, self = this;
+    let saved = 0;
+    this.mut(function (m) {
+      const who = clean(d.who) ? self.ensure(m, "performers", d.who, { kind: d.whoKind }) : null;
+      if (who && who.kind !== d.whoKind && !self.byName(st.map.performers, d.who)) who.kind = d.whoKind;
+      const cids = function (names) { return names.map(function (n) { return self.ensure(m, "containers", n, { medium: null, ownerId: null, fields: [] }).id; }); };
+      const base = {
+        stepId: st.activeStep === NOSTEP ? null : st.activeStep, who: who ? who.id : null, verb: d.verb,
+        objects: cids(d.objects), from: cids(d.from), to: cids(d.to),
+        toWho: v.toWho && clean(d.toWho) ? self.ensure(m, "performers", d.toWho, { kind: "role" }).id : null,
+        onFail: v.onFail && clean(d.onFail) ? clean(d.onFail) : null,
+        fromWho: v.fromWho && clean(d.fromWho) ? self.ensure(m, "performers", d.fromWho, { kind: "external" }).id : null,
+        confirmed: !d.unsure, toldBy: (d.toldBy != null ? clean(d.toldBy) : clean(sess.who)) || null, channel: d.channel || sess.channel, at: new Date().toISOString()
+      };
+      if ((d.verb === "setup" || d.verb === "file") && base.to.length) base.objects.forEach(function (o) { self.nest(m, self.byId(m.containers, o), base.to[0]); });
+      // mixed methods in one copy split into one action per method
+      const groups = [];
+      if (v.group === "info") {
+        const byM = {};
+        d.items.forEach(function (i) {
+          const mk = v.method ? (i.method || d.method || "") : "";
+          if (!byM[mk]) { byM[mk] = []; groups.push(mk); }
+          byM[mk].push({ info: self.ensure(m, "information", i.name).id, method: null });
+        });
+        groups.forEach(function (mk, gi) { groups[gi] = { method: mk || null, items: byM[mk] }; });
+      } else groups.push({ method: null, items: [] });
+      let at = m.actions.length;
+      if (st.editingId) {
+        const idx = m.actions.findIndex(function (a) { return a.id === st.editingId; });
+        if (idx >= 0) { at = idx; m.actions.splice(idx, 1); }
+      }
+      const made = groups.map(function (g) { return Object.assign({ id: uid("act") }, base, { method: v.method ? g.method : null, items: g.items }); });
+      m.actions.splice.apply(m.actions, [at, 0].concat(made));
+      saved = made.length;
+    });
+    const msg = saved > 1 ? "Saved as " + saved + " actions, one per way it moved." : st.editingId ? "Action updated." : "Action recorded.";
+    const nd = emptyDraft(d.who, d.whoKind);
+    this.setState({ draft: nd, line: this.lineOf(nd), editingId: null, notice: msg });
+    clearTimeout(this.nt);
+    this.nt = setTimeout(function () { this.setState({ notice: "" }); }.bind(this), 3000);
+    if (this.lineEl) this.lineEl.focus();
+  }
+
+  goStep(id, flash) {
+    const changed = id !== this.state.activeStep;
+    const patch = { screen: "work", view: "capture", activeStep: id, flash: flash || null };
+    if (changed) {
+      Object.assign(patch, { draft: emptyDraft(), line: "", editingId: null, notice: "" });
+      document.querySelectorAll("input[data-slot]").forEach(function (el) { el.value = ""; });
+    }
+    this.setState(patch);
+    if (flash) { clearTimeout(this.ft); this.ft = setTimeout(function () { this.setState({ flash: null }); }.bind(this), 2600); }
+  }
+
+  /* ---------- derived facts ---------- */
+  facts(m) {
+    const writes = {}, reads = {}, touched = {}, moved = {};
+    const key = function (c, i) { return c + "|" + i; };
+    const cb = {};
+    m.containers.forEach(function (c) { cb[c.id] = c; });
+    m.actions.forEach(function (a) {
+      if (VB[a.verb].group === "container") a.objects.forEach(function (o) {
+        (cb[o] ? cb[o].fields : []).forEach(function (f) {
+          moved[key(o, f)] = 1;
+          if (a.verb === "print") a.to.forEach(function (t) { writes[key(t, f)] = (writes[key(t, f)] || []).concat([a]); reads[key(o, f)] = (reads[key(o, f)] || []).concat([a]); });
+        });
+      });
+      const s = a.stepId || NOSTEP;
+      a.from.concat(a.to, a.objects).forEach(function (c) { (touched[c] = touched[c] || {})[s] = 1; });
+      a.items.forEach(function (it) {
+        if (WRITES[a.verb]) a.to.forEach(function (c) { writes[key(c, it.info)] = (writes[key(c, it.info)] || []).concat([a]); });
+        a.from.forEach(function (c) { reads[key(c, it.info)] = (reads[key(c, it.info)] || []).concat([a]); });
+      });
+    });
+    return { writes: writes, reads: reads, touched: touched, moved: moved, key: key };
+  }
+
+  gaps(m) {
+    const self = this, F = this.facts(m), out = [];
+    const ordered = this.ordered(m);
+    const stepLabel = function (a) { const i = self.stepIdx(m, a.stepId); return i >= 0 ? (i + 1) + ". " + ordered[i].name : "No step"; };
+    const goA = function (a) { return function () { self.goStep(a.stepId || NOSTEP, a.id); }; };
+    const name = function (list, id) { const x = self.byId(m[list], id); return x ? x.name : "?"; };
+    const aItem = function (a, label, extra) { return Object.assign({ label: label, where: stepLabel(a) + " \u00b7 " + (name("performers", a.who) || "nobody") + " " + VB[a.verb].word, go: goA(a) }, extra || {}); };
+    const goC = function (c) { return function () { self.setState({ tab: "containers", flash: c.id }); }; };
+
+    const missing = [];
+    m.actions.forEach(function (a) {
+      const v = VB[a.verb], miss = [];
+      if (!a.who) miss.push("who");
+      if (v.from === "req" && !a.from.length) miss.push("from where");
+      if (v.to === "req" && !a.to.length) miss.push(v.toLabel ? v.toLabel.toLowerCase() + " what" : "into where");
+      if (v.toWho && !v.toWhoOpt && !a.toWho) miss.push(v.toWho.toLowerCase());
+      if (v.fromWho && !a.fromWho) miss.push("from whom");
+      if (v.method && !a.method) miss.push("how");
+      if (miss.length) missing.push(aItem(a, "Missing " + miss.join(", ")));
+    });
+    out.push({ title: "Incomplete actions", why: "Something the action needs wasn't recorded.", items: missing });
+
+    const checks = m.actions.filter(function (a) { return a.verb === "check"; });
+    const ck = function (a) { return self.summary(m, a).replace(/^[^:]+: /, ""); };
+    out.push({ title: "Check result not recorded", why: "The check happens, but the outcome isn't written down or told to anyone.",
+      items: checks.filter(function (a) { return !a.to.length && !a.toWho; }).map(function (a) { return aItem(a, ck(a), { where: stepLabel(a) + " · result stays in " + (name("performers", a.who) || "someone") + "'s head" }); }) });
+    out.push({ title: "No plan if a check fails", why: "Nobody has said what happens when it doesn't match.",
+      items: checks.filter(function (a) { return !a.onFail; }).map(function (a) { return aItem(a, ck(a)); }) });
+
+    const notDefined = [];
+    Object.keys(F.writes).forEach(function (k) {
+      const p = k.split("|"), c = self.byId(m.containers, p[0]);
+      if (c && c.fields.length && c.fields.indexOf(p[1]) < 0) notDefined.push(aItem(F.writes[k][0], name("information", p[1]) + " into " + c.name, {
+        canFix: true, fixLabel: "Define it", fix: function () { self.mut(function () { c.fields.push(p[1]); }); } }));
+    });
+    out.push({ title: "Not listed as held", why: "Written into a container that isn't meant to hold it. Real, or a mistake?", items: notDefined });
+
+    const unused = [];
+    m.containers.forEach(function (c) {
+      c.fields.forEach(function (f) {
+        if (!F.writes[F.key(c.id, f)] && !F.reads[F.key(c.id, f)] && !F.moved[F.key(c.id, f)]) unused.push({ label: name("information", f) + " on " + c.name, where: "Defined, but no action fills or reads it", go: goC(c) });
+      });
+    });
+    out.push({ title: "Defined but untouched", why: "Information a container holds that nobody fills and nobody reads.", items: unused });
+
+    const ghost = [];
+    Object.keys(F.reads).forEach(function (k) {
+      const p = k.split("|"), c = self.byId(m.containers, p[0]);
+      if (c && !F.writes[k] && c.fields.indexOf(p[1]) < 0) ghost.push(aItem(F.reads[k][0], name("information", p[1]) + " from " + c.name));
+    });
+    out.push({ title: "Taken from where it isn't", why: "Read or copied from a container that never receives it and doesn't define it.", items: ghost });
+
+    const pending = [], unknown = [];
+    m.containers.forEach(function (c) {
+      const s = cStatus(c);
+      if (s === "pending") pending.push({ label: c.name, where: c.contentsNote ? "Find out from: " + c.contentsNote : "Nobody noted who can tell you what's on it", go: goC(c) });
+      else if (s === "unknown" && F.touched[c.id]) unknown.push({ label: c.name, where: "Used in the process, but nothing is listed on it", go: goC(c),
+        canFix: true, fixLabel: "List later", fix: function () { self.mut(function () { c.contents = "pending"; }); } });
+    });
+    out.push({ title: "Contents pending", why: "Marked List later. Fill in when you have the form.", items: pending });
+    out.push({ title: "Contents not asked yet", why: "Used in the process, but nobody has said what's on it.", items: unknown });
+    out.push({ title: "Container not used", why: "Set up, but no saved action uses it at any step. Add it to an action, or delete it.",
+      items: m.containers.filter(function (c) { return !F.touched[c.id]; }).map(function (c) {
+        return { label: c.name, where: c.fields.length ? c.fields.length + " information item" + (c.fields.length === 1 ? "" : "s") + " held" : "Nothing listed on it", go: goC(c),
+          canFix: true, fixLabel: "Delete", fix: function () { self.mut(function (mm) { mm.containers = mm.containers.filter(function (x) { return x !== c; }); }); } };
+      }) });
+
+    const born = {};
+    m.actions.forEach(function (a) { if (a.verb === "setup" || a.verb === "receive") a.objects.forEach(function (o) { born[o] = 1; }); if (a.verb === "print") a.to.forEach(function (o) { born[o] = 1; }); });
+    out.push({ title: "Container has no origin", why: "Used in the process, but nobody sets it up, receives it or prints it, and it isn't marked as already existing.",
+      items: m.containers.filter(function (c) { return F.touched[c.id] && !c.preexisting && !born[c.id]; }).map(function (c) {
+        return { label: c.name, where: "Add a Set up action, or mark it as already existing", go: goC(c),
+          canFix: true, fixLabel: "Already exists", fix: function () { self.mut(function () { c.preexisting = true; }); } };
+      }) });
+    const setupPre = [];
+    m.actions.forEach(function (a) { if (a.verb === "setup") a.objects.forEach(function (o) { const c = self.byId(m.containers, o); if (c && c.preexisting) setupPre.push(aItem(a, c.name, { where: "Set up here, but marked as already existing before this process",
+      canFix: true, fixLabel: "Not pre-existing", fix: function () { self.mut(function () { c.preexisting = false; }); } })); }); });
+    out.push({ title: "Set up, but already exists", why: "One of these is wrong: either it's made during the process, or it was there before.", items: setupPre });
+
+    const received = {};
+    m.actions.forEach(function (a) { if (a.verb === "receive") a.objects.forEach(function (o) { const c = self.byId(m.containers, o); if (c) c.fields.forEach(function (f) { received[f] = 1; }); }); });
+    // standing sources: anything defined on them, or taken from them, already exists
+    const pre = {};
+    m.containers.forEach(function (c) { if (c.preexisting) { pre[c.id] = 1; c.fields.forEach(function (f) { received[f] = 1; }); } });
+    m.actions.forEach(function (a) { if (a.from.some(function (c) { return pre[c]; })) a.items.forEach(function (it) { received[it.info] = 1; }); });
+    const noOrigin = [], deadEnd = [];
+    m.information.forEach(function (i) {
+      const acts = m.actions.filter(function (a) { return a.items.some(function (x) { return x.info === i.id; }); });
+      if (!acts.length) return;
+      if (!received[i.id] && !acts.some(function (a) { return a.verb === "create" || a.verb === "measure" || a.verb === "decide" || a.verb === "calculate"; }))
+        noOrigin.push(aItem(acts[0], i.name, { where: "Moved around, but never created, measured, decided or calculated" }));
+      if (!acts.some(function (a) { return a.from.length; }))
+        deadEnd.push(aItem(acts[0], i.name, { where: "Recorded, but no action ever takes it from anywhere" }));
+    });
+    out.push({ title: "No origin", why: "Never created, measured, decided, calculated, received on a document, or taken from something that already exists.", items: noOrigin });
+    out.push({ title: "Existing source, not traced", why: "Already exists before this process. Note who keeps it up to date and where it comes from.",
+      items: m.containers.filter(function (c) { return c.preexisting && (!c.ownerId || !clean(c.preexistingNote)); }).map(function (c) {
+        const miss = []; if (!c.ownerId) miss.push("who keeps it"); if (!clean(c.preexistingNote)) miss.push("where it comes from");
+        return { label: c.name, where: "Missing " + miss.join(" and "), go: goC(c) };
+      }) });
+    out.push({ title: "Never used", why: "Written down, then nothing reads or passes it on.", items: deadEnd });
+
+    out.push({ title: "Unconfirmed", why: "Marked as unsure. Check with someone who does the work.",
+      items: m.actions.filter(function (a) { return !a.confirmed; }).map(function (a) {
+        return aItem(a, self.summary(m, a), { canFix: true, fixLabel: "Confirm", fix: function () { self.mut(function () { a.confirmed = true; }); } });
+      }) });
+    out.push({ title: "Nobody behind it", why: "No record of who told us. Edit the action and set its Source.",
+      items: m.actions.filter(function (a) { return !a.toldBy; }).map(function (a) { return aItem(a, self.summary(m, a)); }) });
+
+    const dups = [];
+    [["information", "information items"], ["containers", "containers"], ["performers", "people or systems"]].forEach(function (pair) {
+      const list = m[pair[0]];
+      for (let x = 0; x < list.length; x++) for (let y = x + 1; y < list.length; y++) {
+        if (!similar(list[x].name, list[y].name)) continue;
+        const A = list[x], B = list[y];
+        dups.push({ label: "\u201c" + A.name + "\u201d / \u201c" + B.name + "\u201d", where: "Same " + pair[1].replace(/s$/, "") + " under two names?", go: function () {},
+          canFix: true, fixLabel: "Merge", fix: function () { self.merge(pair[0], B.id, A.id); } });
+      }
+    });
+    out.push({ title: "Possible duplicates", why: "Merge keeps the first name and repoints every action.", items: dups });
+    return out.filter(function (g) { return g.items.length; });
+  }
+
+  merge(listKey, dropId, keepId) {
+    this.mut(function (m) {
+      m.actions.forEach(function (a) {
+        if (listKey === "information") {
+          a.items.forEach(function (i) { if (i.info === dropId) i.info = keepId; });
+          const seen = {};
+          a.items = a.items.filter(function (i) { if (seen[i.info]) return false; seen[i.info] = 1; return true; });
+        } else if (listKey === "containers") {
+          ["from", "to", "objects"].forEach(function (k) { a[k] = a[k].map(function (c) { return c === dropId ? keepId : c; }).filter(function (c, i, arr) { return arr.indexOf(c) === i; }); });
+        } else {
+          if (a.who === dropId) a.who = keepId;
+          if (a.toWho === dropId) a.toWho = keepId;
+          if (a.fromWho === dropId) a.fromWho = keepId;
+        }
+      });
+      if (listKey === "information") m.containers.forEach(function (c) { c.fields = c.fields.map(function (f) { return f === dropId ? keepId : f; }).filter(function (f, i, arr) { return arr.indexOf(f) === i; }); });
+      if (listKey === "performers") m.containers.forEach(function (c) { if (c.ownerId === dropId) c.ownerId = keepId; });
+      m[listKey] = m[listKey].filter(function (x) { return x.id !== dropId; });
+    });
+  }
+
+  summary(m, a) {
+    const v = VB[a.verb];
+    const what = v.group === "container" ? a.objects.map(function (c) { return (this.byId(m.containers, c) || {}).name; }, this)
+      : a.items.map(function (i) { return (this.byId(m.information, i.info) || {}).name; }, this);
+    return v.label + ": " + what.join(", ");
+  }
+
+  /* ---------- action card ---------- */
+  cardParts(m, a) {
+    const self = this, v = VB[a.verb];
+    const P = [];
+    const word = function (t) { P.push({ text: t, size: "14px", pad: "0", border: "transparent", bg: "transparent", fg: "#5d5d60", weight: 400, font: "Barlow, sans-serif" }); };
+    const who = function (t, kind) { P.push({ text: t, size: "15px", pad: "0", border: "transparent", bg: "transparent", fg: "#1d1f20", weight: 700, font: "'Barlow Condensed', sans-serif" }); if (kind) word(kind); };
+    const verb = function (t) { P.push({ text: t, size: "15px", pad: "0 2px", border: "transparent", bg: "transparent", fg: "#2c455d", weight: 700, font: "'Barlow Condensed', sans-serif" }); };
+    const chip = function (t, kind) {
+      const c = kind === "cont" ? { border: "#b9b9bc", bg: "transparent", fg: "#1d1f20" } : { border: "#94bce3", bg: "#eef6ff", fg: "#2c455d" };
+      P.push(Object.assign({ text: t, size: "13px", pad: "1px 7px", weight: 500, font: "Barlow, sans-serif" }, c));
+    };
+    const miss = function (t) { P.push({ text: t, size: "12px", pad: "1px 7px", border: "#b4552f", bg: "transparent", fg: "#8f3f20", weight: 500, font: "Barlow, sans-serif" }); };
+    const w = this.byId(m.performers, a.who);
+    if (w) who(w.name, "(" + KINDS.find(function (k) { return k[0] === w.kind; })[1].toLowerCase() + ")"); else miss("who?");
+    verb(v.k === "copy" && a.method ? MB[a.method].word : v.word);
+    if (v.k === "copy" && !a.method) miss("how?");
+    if (v.group === "container") a.objects.forEach(function (c) { chip((self.byId(m.containers, c) || {}).name, "cont"); });
+    else a.items.forEach(function (i) { chip((self.byId(m.information, i.info) || {}).name, "info"); });
+    if (v.fromWho) { word("from"); const s2 = this.byId(m.performers, a.fromWho); if (s2) who(s2.name); else miss("whom?"); }
+    const fw = a.verb === "check" ? (a.from.length > 1 ? "against" : "at") : "from";
+    if (a.from.length) { word(fw); a.from.forEach(function (c) { chip((self.byId(m.containers, c) || {}).name, "cont"); }); }
+    else if (v.from === "req") { word(fw); miss("where?"); }
+    if (a.to.length) { word(a.verb === "print" ? "as" : a.verb === "check" ? "result into" : "into"); a.to.forEach(function (c) { chip((self.byId(m.containers, c) || {}).name, "cont"); }); }
+    else if (v.to === "req") { word(a.verb === "print" ? "as" : "into"); miss("where?"); }
+    if (v.toWho && (!v.toWhoOpt || a.toWho)) { word(a.verb === "check" ? "result to" : "to"); const r = this.byId(m.performers, a.toWho); if (r) who(r.name); else miss("whom?"); }
+    if (v.onFail) { word("· if it fails:"); if (a.onFail) P.push({ text: a.onFail, size: "13px", pad: "1px 7px", border: "#5980a6", bg: "transparent", fg: "#2c455d", weight: 500, font: "Barlow, sans-serif" }); else miss("not known"); }
+    return P;
+  }
+
+  atlasData(m) {
+    const self = this, F = this.facts(m), ordered = this.ordered(m);
+    const firstStep = function (cid) {
+      const s = Object.keys(F.touched[cid] || {}).filter(function (x) { return x !== NOSTEP; })
+        .sort(function (a, b) { return self.stepIdx(m, a) - self.stepIdx(m, b); });
+      return s[0] || null;
+    };
+    const methodOf = function (a) {
+      if (a.verb === "copy") return a.method || "unknown";
+      return a.verb;
+    };
+    const methods = [
+      { id: "typed", label: "Typed by hand", style: "dashed", risk: 2.2, speed: 0.17 },
+      { id: "paste", label: "Copy & paste", style: "dashed", risk: 1.8, speed: 0.22 },
+      { id: "written", label: "Hand-written", style: "dashed", risk: 2.0, speed: 0.18 },
+      { id: "scan", label: "Scanned / imported", style: "dashed", risk: 1.5, speed: 0.24 },
+      { id: "auto", label: "Automatically", style: "solid", risk: 0.2, speed: 0.58 },
+      { id: "calculate", label: "Calculated", style: "solid", risk: 0.6, speed: 0.45 },
+      { id: "decide", label: "Decided", style: "solid", risk: 0.8, speed: 0.4 },
+      { id: "measure", label: "Measured", style: "solid", risk: 0.5, speed: 0.45 },
+      { id: "update", label: "Updated", style: "dashed", risk: 1.2, speed: 0.3 },
+      { id: "unknown", label: "Method not recorded", style: "dotted", risk: 3, speed: 0.1 }
+    ];
+    const transfers = [];
+    m.actions.forEach(function (a) {
+      if (!WRITES[a.verb] || !a.from.length || !a.to.length) return;
+      a.items.forEach(function (it) { a.from.forEach(function (f) { a.to.forEach(function (t) {
+        if (f !== t) transfers.push({ information: it.info, from: f, to: t, method: methodOf(a) });
+      }); }); });
+    });
+    return {
+      version: 1, name: m.title || "Untitled map",
+      steps: ordered.map(function (s, i) { return { id: s.id, order: i, label: s.name }; })
+        .concat(m.containers.some(function (c) { return !firstStep(c.id); }) ? [{ id: "__unused", order: ordered.length, label: "Not used in any step yet" }] : []),
+      methods: methods,
+      containers: m.containers.map(function (c) {
+        // owner: set on the container, else whoever most often receives it, fills it or files it
+        let o = self.byId(m.performers, c.ownerId);
+        if (!o) {
+          const tally = {};
+          m.actions.forEach(function (a) {
+            if (!a.who) return;
+            const w = a.to.indexOf(c.id) >= 0 ? 2 : a.objects.indexOf(c.id) >= 0 ? 2 : a.from.indexOf(c.id) >= 0 ? 1 : 0;
+            if (w) tally[a.who] = (tally[a.who] || 0) + w;
+          });
+          const best = Object.keys(tally).sort(function (x, y) { return tally[y] - tally[x]; })[0];
+          o = best ? self.byId(m.performers, best) : null;
+        }
+        const sys = (c.medium || "Format not set") + (c.preexisting ? " \u00b7 existing source" : "");
+        return { id: c.id, name: c.name, step: firstStep(c.id) || "__unused", unused: !firstStep(c.id), preexisting: !!c.preexisting, origin: c.preexistingNote || null, parent: c.parentId || null, owner: o ? o.name : "No owner recorded", system: sys, category: sys, fields: c.fields.slice() };
+      }),
+      information: m.information.map(function (i) { return { id: i.id, name: i.name, category: "Information" }; }),
+      transfers: transfers,
+      checks: m.actions.filter(function (a) { return a.verb === "check"; }).map(function (a) {
+        return { step: a.stepId, information: a.items.map(function (i) { return i.info; }), against: a.from, resultTo: a.to, resultToWho: a.toWho, onFail: a.onFail || null };
+      })
+    };
+  }
+
+  renderVals() {
+    const st = this.state, m = st.map, self = this;
+    const v = {
+      isStart: st.screen === "start", isSetup: st.screen === "setup", isWork: st.screen === "work",
+      templates: TEMPLATES.map(function (t) {
+        return { name: t.name, count: t.steps.length + " steps", pick: function () {
+          const mm = emptyMap("");
+          t.steps.forEach(function (n, i) { mm.steps.push({ id: uid("step"), name: n, order: i }); });
+          self.setState({ map: mm, screen: "setup", activeStep: mm.steps[0].id, savedAt: null });
+        } };
+      }),
+      startBlank: function () { self.setState({ map: emptyMap(""), screen: "setup", activeStep: null, savedAt: null }); },
+      openSample: function () { const s = sampleMap(); self.setState({ map: s, screen: "work", view: "capture", activeStep: s.steps[1].id, draft: emptyDraft(), line: "", savedAt: null }); },
+      savedList: Object.keys(st.lib).map(function (k) { return st.lib[k]; }).filter(function (e) { return e && e.map; })
+        .sort(function (a, b) { return b.savedAt - a.savedAt; }).map(function (e) {
+          const s = e.map, id = s.mapId, pend = st.pendingDel === id;
+          return {
+            title: s.title || "Untitled map",
+            meta: (s.steps || []).length + " steps \u00b7 " + (s.actions || []).length + " actions",
+            when: "Saved " + fmtWhen(e.savedAt),
+            open: function () { const o = self.ordered(s); self.setState({ map: s, session: e.session || st.session, screen: "work", view: "capture", activeStep: o.length ? o[0].id : NOSTEP, pendingDel: null, savedAt: e.savedAt, draft: emptyDraft(), line: "" }); },
+            download: function () { downloadMap(s); },
+            delLabel: pend ? "Confirm delete" : "Delete", delBg: pend ? "#fbeee8" : "transparent", delBorder: pend ? "#b4552f" : "#d4d4d7",
+            remove: function () {
+              if (!pend) return self.setState({ pendingDel: id });
+              const lib = readLib(); delete lib[id];
+              try { localStorage.setItem(LIB, JSON.stringify(lib)); } catch (er) {}
+              self.setState({ lib: lib, pendingDel: null });
+            }
+          };
+        }),
+      noSaved: !Object.keys(st.lib).length,
+      importErr: st.importErr,
+      importFile: function (ev) {
+        const f = ev.target.files && ev.target.files[0];
+        ev.target.value = "";
+        if (!f) return;
+        f.text().then(function (text) {
+          let raw;
+          try { raw = JSON.parse(text); } catch (e) { return self.setState({ importErr: "That file isn't valid JSON." }); }
+          const need = ["steps", "performers", "containers", "information", "actions"];
+          for (let k = 0; k < need.length; k++) if (!raw || !Array.isArray(raw[need[k]])) return self.setState({ importErr: "That file has no " + need[k] + ". It may be from the older intake model." });
+          if (!raw.mapId || st.lib[raw.mapId]) raw.mapId = uid("map");
+          if (!raw.createdAt) raw.createdAt = new Date().toISOString();
+          raw.modifiedAt = new Date().toISOString();
+          const o = self.ordered(raw);
+          self.setState({ map: raw, screen: "work", view: "capture", activeStep: o.length ? o[0].id : NOSTEP, importErr: "" });
+        });
+      },
+      toStart: function () { self.setState({ screen: "start", drawer: false, pendingDel: null, lib: readLib() }); },
+      infoNames: m ? (function () { const ns = m.information.map(function (x) { return x.name; }); ((st.draft && st.draft.items) || []).forEach(function (it) { if (it.name && !ns.some(function (n) { return n.toLowerCase() === it.name.toLowerCase(); })) ns.push(it.name); }); return ns; })() : [],
+      contNames: m ? m.containers.map(function (x) { return x.name; }) : [],
+      whoNames: m ? m.performers.map(function (x) { return x.name; }) : [],
+      stepNames: []
+    };
+    if (!m) return v;
+    const ordered = this.ordered(m);
+    const countAt = function (sid) { return m.actions.filter(function (a) { return (a.stepId || NOSTEP) === sid; }).length; };
+
+    v.mapTitle = m.title;
+    v.mapTitleUpper = (m.title || "Untitled map").toUpperCase();
+    v.setTitle = function (ev) { self.mut(function () { m.title = ev.target.value; }); };
+    v.steps = ordered.map(function (s, i) {
+      const on = st.activeStep === s.id;
+      return {
+        n: i + 1, name: s.name, count: countAt(s.id) || "",
+        checks: (function () { const n = m.actions.filter(function (a) { return a.verb === "check" && a.stepId === s.id; }).length; return n ? n + " check" + (n === 1 ? "" : "s") : ""; })(),
+        hasChecks: m.actions.some(function (a) { return a.verb === "check" && a.stepId === s.id; }), bg: on ? "#eef6ff" : "transparent", bar: on ? "#416180" : "transparent",
+        go: function () { self.goStep(s.id); },
+        rename: function (ev) { self.mut(function () { s.name = ev.target.value; }); },
+        up: function () { if (i > 0) self.mut(function () { const p = ordered[i - 1], o = p.order; p.order = s.order; s.order = o; }); },
+        down: function () { if (i < ordered.length - 1) self.mut(function () { const p = ordered[i + 1], o = p.order; p.order = s.order; s.order = o; }); },
+        remove: function () {
+          self.mut(function () { m.actions.forEach(function (a) { if (a.stepId === s.id) a.stepId = null; }); m.steps = m.steps.filter(function (x) { return x !== s; }); self.renumber(m); });
+          if (st.activeStep === s.id) { const nx = ordered[i + 1] || ordered[i - 1]; self.setState({ activeStep: nx ? nx.id : NOSTEP }); }
+        }
+      };
+    });
+    v.addStepKey = function (ev) {
+      const typed = clean(ev.target.value);
+      if (ev.key !== "Enter" || !typed) return;
+      ev.preventDefault();
+      ev.target.value = "";
+      const s = { id: uid("step"), name: typed, order: m.steps.length };
+      self.mut(function () { m.steps.push(s); self.renumber(m); });
+      if (st.screen === "work" && !st.drawer) self.goStep(s.id);
+    };
+    v.setupError = st.setupError;
+    v.startCapture = function () {
+      const box = document.querySelector("input[placeholder^='+ Add a step']");
+      const typed = box ? clean(box.value) : "";
+      let first = ordered[0];
+      if (typed) { first = first || { id: uid("step"), name: typed, order: 0 }; self.mut(function () { if (!ordered.length) m.steps.push(first); else m.steps.push({ id: uid("step"), name: typed, order: m.steps.length }); self.renumber(m); }); box.value = ""; }
+      if (!first) { self.setState({ setupError: "Add at least one step first." }); return; }
+      if (!clean(m.title)) self.mut(function () { m.title = "Untitled map"; });
+      self.setState({ setupError: "" });
+      self.goStep(first.id);
+    };
+
+    v.views = [["capture", "Capture"], ["map", "Map"]].map(function (x) {
+      const on = st.view === x[0];
+      return { label: x[1], bg: on ? "#416180" : "transparent", fg: on ? "#f2f2f3" : "#424244", pick: function () {
+        if (x[0] === "map") { try { localStorage.setItem("ifm-atlas-handoff", JSON.stringify(self.atlasData(m))); } catch (e) {} self.setState({ view: "map", mapV: st.mapV + 1 }); }
+        else self.setState({ view: "capture" });
+      } };
+    });
+    v.isMap = st.view === "map";
+    v.isCapture = st.view !== "map";
+    v.atlasSrc = "Information Flow Atlas.dc.html?from=intake&v=" + st.mapV;
+    v.openAtlas = function () { try { localStorage.setItem("ifm-atlas-handoff", JSON.stringify(self.atlasData(m))); } catch (e) {} window.open("Information Flow Atlas.dc.html?from=intake", "_blank"); };
+
+    v.sessionWho = st.session.who;
+    v.setSessionWho = function (ev) { self.setState({ session: Object.assign({}, st.session, { who: ev.target.value }) }); };
+    v.whoBg = st.session.who ? "#f2f2f3" : "#fbeee8";
+    v.whoBorder = st.session.who ? "#d4d4d7" : "#b4552f";
+    v.channels = CHANNELS.map(function (c) {
+      const on = st.session.channel === c;
+      return { label: c, bg: on ? "#416180" : "transparent", fg: on ? "#f2f2f3" : "#424244", pick: function () { self.setState({ session: Object.assign({}, st.session, { channel: c }) }); } };
+    });
+    v.drawer = st.drawer;
+    v.openDrawer = function () { self.setState({ drawer: true }); };
+    v.closeDrawer = function () { self.setState({ drawer: false }); };
+    v.exportFile = function () { downloadMap(m); };
+    v.saveStatus = st.saveErr || (st.savedAt ? "Saved " + fmtWhen(st.savedAt) : "Not saved yet");
+    v.saveColor = st.saveErr ? "#8f3f20" : "#5d5d60";
+
+    const ns = m.actions.filter(function (a) { return !a.stepId; }).length;
+    v.hasNoStep = ns > 0; v.noStepCount = ns;
+    v.noStepBg = st.activeStep === NOSTEP ? "#eef6ff" : "transparent";
+    v.goNoStep = function () { self.goStep(NOSTEP); };
+
+    const idx = this.stepIdx(m, st.activeStep);
+    v.stepKicker = st.activeStep === NOSTEP ? "Not a step: actions whose step was removed" : "Step " + (idx + 1) + " of " + ordered.length;
+    v.stepTitle = st.activeStep === NOSTEP ? "ACTIONS WITH NO STEP" : idx >= 0 ? ordered[idx].name.toUpperCase() : "";
+    v.prevStep = function () { if (idx > 0) self.goStep(ordered[idx - 1].id); };
+    v.nextStep = function () { if (idx >= 0 && idx < ordered.length - 1) self.goStep(ordered[idx + 1].id); };
+
+    const here = m.actions.filter(function (a) { return (a.stepId || NOSTEP) === st.activeStep; });
+    v.noActions = !here.length;
+    v.actionCards = here.map(function (a, i) {
+      const editing = st.editingId === a.id, fl = st.flash === a.id;
+      const move = function (dir) {
+        const other = here[i + dir];
+        if (!other) return;
+        self.mut(function (mm) {
+          const x = mm.actions.indexOf(a), y = mm.actions.indexOf(other);
+          if (x < 0 || y < 0) return;
+          mm.actions[x] = other; mm.actions[y] = a;
+        });
+      };
+      return {
+        up: function () { move(-1); }, down: function () { move(1); },
+        isFirst: i === 0, isLast: i === here.length - 1,
+        upOp: i === 0 ? 0.3 : 1, downOp: i === here.length - 1 ? 0.3 : 1,
+        n: i + 1, parts: self.cardParts(m, a),
+        border: editing ? "#416180" : "#d4d4d7", bg: fl ? "#d6ebff" : editing ? "#eef6ff" : "transparent",
+        edge: a.confirmed ? "transparent" : "#b4552f", edgeStyle: a.confirmed ? "solid" : "dashed",
+        told: a.toldBy ? "per " + a.toldBy + (a.channel ? " \u00b7 " + a.channel.toLowerCase() : "") : "Nobody recorded as telling us this",
+        toldFg: a.toldBy ? "#5d5d60" : "#8f3f20",
+        confLabel: a.confirmed ? "Confirmed" : "Unconfirmed",
+        confBorder: a.confirmed ? "#d4d4d7" : "#b4552f", confFg: a.confirmed ? "#5d5d60" : "#8f3f20",
+        toggle: function () { self.mut(function () { a.confirmed = !a.confirmed; }); },
+        remove: function () { self.mut(function () { m.actions = m.actions.filter(function (x) { return x !== a; }); }); },
+        edit: function () {
+          const nm = function (list, id) { const x = self.byId(m[list], id); return x ? x.name : ""; };
+          const w = self.byId(m.performers, a.who);
+          const d = { who: w ? w.name : "", whoKind: w ? w.kind : "role", verb: a.verb, method: a.method,
+            items: a.items.map(function (it) { return { name: nm("information", it.info), method: null }; }),
+            objects: a.objects.map(function (c) { return nm("containers", c); }), from: a.from.map(function (c) { return nm("containers", c); }),
+            to: a.to.map(function (c) { return nm("containers", c); }), toWho: nm("performers", a.toWho), fromWho: nm("performers", a.fromWho), onFail: a.onFail || "", unsure: !a.confirmed, toldBy: a.toldBy || "", channel: a.channel || null };
+          self.setState({ editingId: a.id, draft: d, line: self.lineOf(d) });
+        }
+      };
+    });
+
+    /* composer */
+    const d = st.draft, vb = d.verb ? VB[d.verb] : null;
+    const sel = function (on) { return on ? { bg: "#416180", fg: "#f2f2f3", border: "#416180" } : { bg: "transparent", fg: "#424244", border: "#b9b9bc" }; };
+    v.isEditing = !!st.editingId;
+    v.cancelEdit = function () { const nd = emptyDraft(d.who, d.whoKind); self.setState({ editingId: null, draft: nd, line: self.lineOf(nd) }); };
+    v.clearDraft = function () { const nd = emptyDraft(); self.setState({ editingId: null, draft: nd, line: "" }); };
+    v.composerTitle = (st.editingId ? "Edit action at " : "Record an action at ") + (st.activeStep === NOSTEP ? "no step" : idx >= 0 ? ordered[idx].name : "");
+    v.dWho = d.who;
+    v.setWho = function (ev) {
+      const val = ev.target.value, ex = self.byName(m.performers, val);
+      self.setDraft({ who: val, whoKind: ex ? ex.kind : d.whoKind });
+    };
+    v.whoKinds = KINDS.map(function (k) {
+      return Object.assign({ label: k[1], pick: function () {
+        self.setDraft({ whoKind: k[0] });
+        const ex = self.byName(m.performers, d.who);
+        if (ex) self.mut(function () { ex.kind = k[0]; });
+      } }, sel(d.whoKind === k[0]));
+    });
+    const verbBtn = function (x) {
+      return Object.assign({ label: x.label, hint: x.hint, pick: function () {
+        if (d.verb === x.k) return;
+        const wasGroup = vb ? vb.group : null;
+        const keep = wasGroup === x.group;
+        self.setDraft({ verb: x.k, method: x.method ? d.method : null,
+          items: keep || x.group === "info" ? d.items : [], objects: keep || x.group === "container" ? d.objects : [],
+          from: x.from && x.from !== "none" ? d.from : [], to: x.to !== "none" ? d.to : [], toWho: x.toWho ? d.toWho : "", fromWho: x.fromWho ? d.fromWho : "", onFail: x.onFail ? d.onFail : "" });
+      } }, sel(d.verb === x.k));
+    };
+    v.infoVerbs = VERBS.filter(function (x) { return x.group === "info"; }).map(verbBtn);
+    v.contVerbs = VERBS.filter(function (x) { return x.group === "container"; }).map(verbBtn);
+    v.hasMethodRow = !!(vb && vb.method);
+    v.methods = METHODS.map(function (x) { return Object.assign({ label: x.label, pick: function () { self.setDraft({ method: d.method === x.k ? null : x.k }); } }, sel(d.method === x.k)); });
+
+    const slotDefs = [];
+    if (vb) {
+      slotDefs.push(vb.group === "container"
+        ? { key: "objects", label: "Which", list: "dl-cont", ph: "Container name, Enter", req: true }
+        : { key: "items", label: "What", list: "dl-info", ph: "Information, Enter. Add several", req: true });
+      if (vb.from && vb.from !== "none") slotDefs.push({ key: "from", label: vb.fromLabel || "From", list: "dl-cont", ph: vb.fromLabel ? "Where they look, e.g. Shelf, ERP record (optional). Add a second if they compare" : vb.from === "opt" ? "Container (optional)" : "Container, Enter", req: vb.from === "req" });
+      if (vb.to !== "none") slotDefs.push({ key: "to", label: vb.toLabel || "Into", list: "dl-cont", ph: vb.k === "print" ? "Name of the copy" : vb.k === "setup" ? "Where it lives, e.g. Jobs drive (optional)" : vb.k === "check" ? "Where the outcome is written (optional)" : vb.to === "opt" ? "Container (optional)" : "Container, Enter", req: vb.to === "req" });
+    }
+    v.slots = slotDefs.map(function (s) {
+      const vals = d[s.key];
+      const addVal = function (val) {
+        const t = clean(val);
+        if (!t) return false;
+        if (s.key === "items") { if (!vals.some(function (x) { return ci(x.name) === ci(t); })) self.setDraft({ items: vals.concat([{ name: t, method: null }]) }); }
+        else if (!vals.some(function (x) { return ci(x) === ci(t); })) { const p = {}; p[s.key] = vals.concat([t]); self.setDraft(p); }
+        return true;
+      };
+      return {
+        key: s.key, label: s.label, listId: s.list, placeholder: s.ph,
+        labelFg: s.req && !vals.length ? "#8f3f20" : "#5d5d60",
+        border: s.req && !vals.length ? "#b4552f" : "#b9b9bc",
+        onKey: function (ev) {
+          if (ev.key === "Enter" || (ev.key === "," && s.key !== "items")) {
+            ev.preventDefault();
+            if (!addVal(ev.target.value)) { if (ev.key === "Enter") self.commit(); }
+            ev.target.value = "";
+          } else if (ev.key === "Backspace" && !ev.target.value && vals.length) {
+            const p = {}; p[s.key] = vals.slice(0, -1); self.setDraft(p);
+          }
+        },
+        onBlur: function (ev) { if (addVal(ev.target.value)) ev.target.value = ""; },
+        suggest: s.key !== "items" ? [] : (function () {
+          const out = [];
+          d.from.concat(d.to).forEach(function (cn) {
+            const c = self.byName(m.containers, cn);
+            if (!c) return;
+            c.fields.forEach(function (f) {
+              const i = self.byId(m.information, f);
+              if (i && !vals.some(function (x) { return ci(x.name) === ci(i.name); }) && !out.some(function (o) { return ci(o.text) === ci(i.name); }))
+                out.push({ text: "+ " + i.name, pick: function () { addVal(i.name); } });
+            });
+          });
+          return out;
+        })(),
+        chips: vals.map(function (c, ci2) {
+          const text = s.key === "items" ? c.name : c;
+          return {
+            text: text, hasMethod: s.key === "items" && !!vb.method,
+            method: s.key === "items" ? c.method || "" : "",
+            methodOpts: [{ value: "", label: "same" }].concat(METHODS.map(function (x) { return { value: x.k, label: x.label }; })),
+            setMethod: function (ev) { const items = d.items.map(function (x, k) { return k === ci2 ? { name: x.name, method: ev.target.value || null } : x; }); self.setDraft({ items: items }); },
+            remove: function () { const p = {}; p[s.key] = vals.filter(function (_, k) { return k !== ci2; }); self.setDraft(p); }
+          };
+        })
+      };
+    });
+    v.editWho = function () { self.setState({ tab: "who" }); };
+    v.hasToWho = !!(vb && vb.toWho);
+    v.toWhoLabel = vb && vb.toWho ? vb.toWho : "";
+    v.toWhoLabelFg = vb && vb.toWho && !vb.toWhoOpt && !clean(d.toWho) ? "#8f3f20" : "#5d5d60";
+    v.toWhoPh = vb && vb.toWhoOpt ? "Who hears the outcome? (optional)" : "Who receives it?";
+    v.hasOnFail = !!(vb && vb.onFail);
+    v.dOnFail = d.onFail || "";
+    v.setOnFail = function (ev) { self.setDraft({ onFail: ev.target.value }); };
+    v.stepNames = ordered.map(function (s) { return s.name; });
+    v.dToWho = d.toWho;
+    v.setToWho = function (ev) { self.setDraft({ toWho: ev.target.value }); };
+    v.hasFromWho = !!(vb && vb.fromWho);
+    v.fromWhoLabelFg = vb && vb.fromWho && !clean(d.fromWho) ? "#8f3f20" : "#5d5d60";
+    v.dFromWho = d.fromWho || "";
+    v.setFromWho = function (ev) { self.setDraft({ fromWho: ev.target.value }); };
+
+    const cNames = [];
+    d.objects.concat(d.from, d.to).forEach(function (n) { if (clean(n) && !cNames.some(function (x) { return ci(x) === ci(n); })) cNames.push(clean(n)); });
+    v.hasContents = cNames.length > 0;
+    v.contentsCards = cNames.map(function (name) {
+      const c = self.byName(m.containers, name);
+      const status = c ? cStatus(c) : "unknown";
+      const ensureC = function (mm) { return self.ensure(mm, "containers", name, { medium: null, ownerId: null, fields: [] }); };
+      const add = function (el) {
+        const parts = String(el.value).split(/[,;\n]/).map(clean).filter(Boolean);
+        if (!parts.length) return false;
+        self.mut(function (mm) {
+          const cc = ensureC(mm);
+          parts.forEach(function (t) {
+            const asC = self.byName(mm.containers, t);
+            if (asC && !self.byName(mm.information, t)) { if (asC !== cc) self.nest(mm, asC, cc.id); return; }
+            const i = self.ensure(mm, "information", t); if (cc.fields.indexOf(i.id) < 0) cc.fields.push(i.id);
+          });
+          if (cStatus(cc) === "unknown") cc.contents = "listed";
+        });
+        el.value = "";
+        return true;
+      };
+      return {
+        name: name,
+        meta: !c ? "New container" : c.fields.length ? c.fields.length + " information item" + (c.fields.length === 1 ? "" : "s") : "",
+        medium: c && c.medium ? c.medium : "",
+        mediumBorder: c && c.medium ? "#b9b9bc" : "#b4552f",
+        setMedium: function (ev) { const val = clean(ev.target.value); self.mut(function (mm) { ensureC(mm).medium = val || null; }); },
+        statuses: STATUSES.map(function (s) {
+          const on = status === s[0];
+          return { label: s[1], bg: on ? (s[0] === "listed" ? "#416180" : "#fbeee8") : "transparent", fg: on ? (s[0] === "listed" ? "#f2f2f3" : "#8f3f20") : "#424244",
+            pick: function () { self.mut(function (mm) { ensureC(mm).contents = s[0]; }); } };
+        }),
+        fields: c ? c.fields.map(function (f) {
+          const i = self.byId(m.information, f);
+          return { name: i ? i.name : "?", remove: function () { self.mut(function () { c.fields = c.fields.filter(function (x) { return x !== f; }); }); } };
+        }) : [],
+        addField: function (ev) { if (ev.key === "Enter") { ev.preventDefault(); add(ev.target); } },
+        blurField: function (ev) { add(ev.target); },
+        subs: c ? self.subsOf(m, c) : [],
+        addSub: function (ev) { if (ev.key === "Enter") { ev.preventDefault(); self.addSub(ev.target, name); } },
+        blurSub: function (ev) { self.addSub(ev.target, name); },
+        hasSubErr: !!(st.subErr && st.subErr.at === name), subErr: st.subErr ? st.subErr.msg : "",
+        suggest: d.items.filter(function (it) { const i = self.byName(m.information, it.name); return !(c && i && c.fields.indexOf(i.id) >= 0); })
+          .map(function (it) { return { text: "+ " + it.name, pick: function () { add({ value: it.name }); } }; }),
+        isPending: status === "pending",
+          pre: !!(c && c.preexisting),
+          togglePre: function (ev) { const on = ev.target.checked; self.mut(function (mm) { ensureC(mm).preexisting = on; }); },
+          owner: (function () { const cc = c; const o = cc ? self.byId(m.performers, cc.ownerId) : null; return o ? o.name : ""; })(),
+          ownerBorder: c && c.ownerId ? "#b9b9bc" : "#b4552f",
+          setOwner: function (ev) { const val = ev.target.value; self.mut(function (mm) { const p = clean(val) ? self.ensure(mm, "performers", val, { kind: "role" }) : null; ensureC(mm).ownerId = p ? p.id : null; }); },
+          preNote: c && c.preexistingNote ? c.preexistingNote : "",
+          preNoteBorder: c && c.preexistingNote ? "#b9b9bc" : "#b4552f",
+          setPreNote: function (ev) { const val = ev.target.value; self.mut(function (mm) { ensureC(mm).preexistingNote = val; }); },
+        note: c && c.contentsNote ? c.contentsNote : "",
+        setNote: function (ev) { const val = ev.target.value; self.mut(function (mm) { ensureC(mm).contentsNote = val; }); }
+      };
+    });
+
+    v.line = st.line;
+    v.lineRef = function (el) { self.lineEl = el; };
+    v.setLine = function (ev) { self.setState({ line: ev.target.value, draft: self.parseLine(ev.target.value) }); };
+    v.lineKey = function (ev) { if (ev.key === "Enter") { ev.preventDefault(); self.commit(); } };
+    v.unsureLabel = d.unsure ? "Unsure \u2713" : "Unsure ?";
+    v.unsureBg = d.unsure ? "#fbeee8" : "transparent";
+    v.unsureFg = d.unsure ? "#8f3f20" : "#424244";
+    v.unsureBorder = d.unsure ? "#b4552f" : "#b9b9bc";
+    v.toggleUnsure = function () { self.setDraft({ unsure: !d.unsure }); };
+    const own = d.toldBy != null;
+    v.dToldBy = own ? d.toldBy : st.session.who;
+    v.dToldPh = "Who told us this?";
+    const missing = !(own ? d.toldBy : st.session.who).trim();
+    v.dToldBorder = missing ? "#b4552f" : "#b9b9bc";
+    v.dToldLabelFg = missing ? "#8f3f20" : "#5d5d60";
+    v.setDToldBy = function (ev) { self.setState({ draft: Object.assign({}, self.state.draft, { toldBy: ev.target.value }) }); };
+    const dch = d.channel || st.session.channel;
+    v.dChannels = CHANNELS.map(function (c) {
+      const on = dch === c;
+      return { label: c, bg: on ? "#416180" : "transparent", fg: on ? "#f2f2f3" : "#424244", pick: function () { self.setState({ draft: Object.assign({}, self.state.draft, { channel: c }) }); } };
+    });
+    v.dToldNote = st.editingId ? "" : own || d.channel ? "This action only" : "From the session";
+    v.commit = function () { self.commit(); };
+    const methodsUsed = vb && vb.method ? d.items.map(function (i) { return i.method || d.method || ""; }).filter(function (x, i, arr) { return arr.indexOf(x) === i; }).length : 1;
+    v.commitLabel = st.editingId ? "Update" : methodsUsed > 1 ? "Save as " + methodsUsed : "Save action";
+    v.draftIssue = this.draftIssues(d);
+    v.notice = st.notice;
+
+    /* side panel */
+    v.tabs = [["gaps", "Gaps"], ["containers", "Containers"], ["info", "Information"], ["who", "Who"]].map(function (t) {
+      const on = st.tab === t[0];
+      return { label: t[1], bar: on ? "#416180" : "transparent", fg: on ? "#1d1f20" : "#5d5d60", pick: function () { self.setState({ tab: t[0] }); } };
+    });
+    v.tabGaps = st.tab === "gaps"; v.tabContainers = st.tab === "containers"; v.tabInfo = st.tab === "info"; v.tabWho = st.tab === "who";
+
+    if (v.tabGaps) {
+      const groups = this.gaps(m);
+      v.gapGroups = groups.map(function (g) { return { title: g.title, why: g.why, count: g.items.length, items: g.items.map(function (i) { return Object.assign({ canFix: false, fixLabel: "", fix: function () {} }, i); }) }; });
+      v.noGaps = !groups.length;
+    }
+    if (v.tabContainers) {
+      const F = this.facts(m);
+      v.libContainers = m.containers.slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (c) {
+        const o = self.byId(m.performers, c.ownerId);
+        const extra = m.information.filter(function (i) { return F.writes[F.key(c.id, i.id)] && c.fields.indexOf(i.id) < 0; }).map(function (i) { return i.name; });
+        const steps = Object.keys(F.touched[c.id] || {}).map(function (sid) { const k = self.stepIdx(m, sid); return k >= 0 ? k + 1 : null; }).filter(Boolean).sort(function (a, b) { return a - b; });
+        return {
+          name: c.name, medium: c.medium || "", owner: o ? o.name : "", bg: st.flash === c.id ? "#d6ebff" : "transparent",
+          rename: function (ev) { self.mut(function () { c.name = ev.target.value; }); },
+          setMedium: function (ev) { self.mut(function () { c.medium = ev.target.value || null; }); },
+          setOwner: function (ev) { self.mut(function (mm) { const p = clean(ev.target.value) ? self.ensure(mm, "performers", ev.target.value, { kind: "role" }) : null; c.ownerId = p ? p.id : null; }); },
+          fields: c.fields.map(function (f) {
+            const i = self.byId(m.information, f), used = F.writes[F.key(c.id, f)] || F.reads[F.key(c.id, f)];
+            return { name: i ? i.name : "?", border: used ? "#94bce3" : "#b4552f", style: used ? "solid" : "dashed", fg: used ? "#2c455d" : "#8f3f20", bg: used ? "#eef6ff" : "transparent",
+              remove: function () { self.mut(function () { c.fields = c.fields.filter(function (x) { return x !== f; }); }); } };
+          }),
+          addField: function (ev) {
+            const t = clean(ev.target.value);
+            if (ev.key !== "Enter" || !t) return;
+            ev.preventDefault(); ev.target.value = "";
+            self.mut(function (mm) { const i = self.ensure(mm, "information", t); if (c.fields.indexOf(i.id) < 0) c.fields.push(i.id); });
+          },
+          status: cStatus(c), isPending: cStatus(c) === "pending", note: c.contentsNote || "",
+          statusBorder: cStatus(c) === "listed" ? "#d4d4d7" : "#b4552f",
+          setStatus: function (ev) { self.mut(function () { c.contents = ev.target.value; }); },
+          setNote: function (ev) { self.mut(function () { c.contentsNote = ev.target.value; }); },
+          hasExtra: extra.length > 0, extra: extra.join(", "),
+          touched: steps.length ? "Touched at step " + steps.join(", ") : "No action touches it yet",
+          pre: !!(c && c.preexisting),
+          togglePre: function (ev) { const on = ev.target.checked; self.mut(function (mm) { c.preexisting = on; }); },
+          ownerBorder: c && c.ownerId ? "#b9b9bc" : "#b4552f",
+          preNote: c && c.preexistingNote ? c.preexistingNote : "",
+          preNoteBorder: c && c.preexistingNote ? "#b9b9bc" : "#b4552f",
+          setPreNote: function (ev) { const val = ev.target.value; self.mut(function (mm) { c.preexistingNote = val; }); },
+          ownerBorder: c.ownerId || !c.preexisting ? "#d4d4d7" : "#b4552f",
+          parent: (function () { const p = self.byId(m.containers, c.parentId); return p ? p.name : ""; })(),
+          setParent: function (ev) {
+            const val = clean(ev.target.value);
+            self.mut(function (mm) {
+              if (!val) return self.nest(mm, c, null);
+              if (val.toLowerCase() === c.name.toLowerCase()) return;
+              const p = self.ensure(mm, "containers", val, { medium: null, ownerId: null, fields: [] });
+              self.nest(mm, c, p.id);
+            });
+          },
+          subs: self.subsOf(m, c),
+          addSub: function (ev) { if (ev.key === "Enter") { ev.preventDefault(); self.addSub(ev.target, c.name); } },
+          hasSubErr: !!(st.subErr && st.subErr.at === c.name), subErr: st.subErr ? st.subErr.msg : ""
+        };
+      });
+    }
+    if (v.tabInfo) {
+      v.libInfo = m.information.slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (i) {
+        const acts = m.actions.filter(function (a) { return a.items.some(function (x) { return x.info === i.id; }); });
+        const holders = m.containers.filter(function (c) { return c.fields.indexOf(i.id) >= 0; }).length;
+        return { name: i.name, rename: function (ev) { self.mut(function () { i.name = ev.target.value; }); },
+          meta: acts.length + " action" + (acts.length === 1 ? "" : "s") + " \u00b7 defined on " + holders + " container" + (holders === 1 ? "" : "s") };
+      });
+    }
+    if (v.tabWho) {
+      v.libWho = m.performers.map(function (p) {
+        const n = m.actions.filter(function (a) { return a.who === p.id || a.toWho === p.id || a.fromWho === p.id; }).length;
+        const owns = m.containers.filter(function (c) { return c.ownerId === p.id; }).length;
+        const drop = function () {
+          self.mut(function (mm) {
+            mm.actions.forEach(function (a) { ["who", "toWho", "fromWho"].forEach(function (k) { if (a[k] === p.id) a[k] = null; }); });
+            mm.containers.forEach(function (c) { if (c.ownerId === p.id) c.ownerId = null; });
+            mm.performers = mm.performers.filter(function (x) { return x.id !== p.id; });
+          });
+          self.setState({ pendingWho: null });
+        };
+        return { name: p.name, kind: p.kind, count: n + " action" + (n === 1 ? "" : "s"),
+          remove: function () { if (!n && !owns) return drop(); self.setState({ pendingWho: p.id }); },
+          confirming: st.pendingWho === p.id,
+          warn: p.name + " is in " + n + " action" + (n === 1 ? "" : "s") + (owns ? " and owns " + owns + " container" + (owns === 1 ? "" : "s") : "") + ". Move them to the right name, or delete and leave those blank.",
+          others: m.performers.filter(function (x) { return x.id !== p.id; }).map(function (x) { return { id: x.id, name: x.name }; }),
+          mergeInto: function (ev) { const to = ev.target.value; if (!to) return; self.merge("performers", p.id, to); self.setState({ pendingWho: null }); },
+          clearDelete: drop,
+          cancel: function () { self.setState({ pendingWho: null }); },
+          rename: function (ev) {
+            const old = p.name, nv = ev.target.value;
+            self.mut(function () { p.name = nv; });
+            const dr = self.state.draft, fix = {};
+            ["who", "toWho", "fromWho"].forEach(function (k) { if (dr[k] && ci(dr[k]) === ci(old)) fix[k] = nv; });
+            const ses = self.state.session;
+            const patch = {};
+            if (Object.keys(fix).length) { const nd = Object.assign({}, dr, fix); patch.draft = nd; patch.line = self.lineOf(nd); }
+            if (ses.who && ci(ses.who) === ci(old)) patch.session = Object.assign({}, ses, { who: nv });
+            if (Object.keys(patch).length) self.setState(patch);
+          },
+          setKind: function (ev) { self.mut(function () { p.kind = ev.target.value; }); } };
+      });
+    }
+    return v;
+  }
+}
+
+</script>
+</body>
+</html>
