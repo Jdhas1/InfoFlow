@@ -1,4 +1,7 @@
+import { EngineCheck } from "./EngineCheck";
 import { VersionBadge } from "./VersionBadge";
+
+const CURRENT = 1; // 0-based index of the stage in review
 
 const STAGES = [
   "Foundation",
@@ -12,8 +15,8 @@ const STAGES = [
 ];
 
 /**
- * Stage 1 placeholder. It proves the build, fonts, design tokens and version number work.
- * The real start screen replaces this in stage 3.
+ * Build-in-progress page: proves the build, fonts, design tokens and version number work,
+ * and (from stage 2) lets you try the engine. The real start screen replaces this in stage 3.
  */
 export function App() {
   return (
@@ -26,8 +29,8 @@ export function App() {
         <div className="placeholder-intro">
           <h1 className="display">MAP INTAKE</h1>
           <p className="lede">
-            The beta is being built. This page confirms the foundations are in place: the app builds, the design&rsquo;s
-            fonts and colours load from inside the app, and the version number shows.
+            The beta is being built. This page lets you try the engine underneath Map Intake: the sentence reader, and
+            the checks it runs on a map. The real screens arrive in stage 3.
           </p>
         </div>
         <section className="card blueprint" aria-labelledby="progress-title">
@@ -37,18 +40,20 @@ export function App() {
           <i className="corner br" />
           <div className="card-kicker">Build progress</div>
           <h2 id="progress-title" className="card-title">
-            Stage 1 of {STAGES.length}
+            Stage {CURRENT + 1} of {STAGES.length}
           </h2>
           <ol className="stage-list">
             {STAGES.map((s, i) => (
-              <li key={s} className={i === 0 ? "is-current" : undefined} aria-current={i === 0 ? "step" : undefined}>
+              <li key={s} className={i === CURRENT ? "is-current" : i < CURRENT ? "is-done" : undefined} aria-current={i === CURRENT ? "step" : undefined}>
                 <span className="stage-n">{String(i + 1).padStart(2, "0")}</span>
                 <span>{s}</span>
-                {i === 0 && <span className="tag tag-accent">In review</span>}
+                {i < CURRENT && <span className="tag tag-neutral">Done</span>}
+                {i === CURRENT && <span className="tag tag-accent">In review</span>}
               </li>
             ))}
           </ol>
         </section>
+        <EngineCheck />
       </main>
       <footer className="footer">
         <VersionBadge />
